@@ -1,5 +1,6 @@
 require('dotenv').config()
 export default {
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'tcc-identificacao-criminosos',
@@ -14,6 +15,10 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
+  },
+
+  router: {
+    middleware: ['auth']
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -34,8 +39,41 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
+  axios: {
+    // proxy: true,
+    credentials: true
+  },
+  // proxy: {
+  //   '/laravel': {
+  //     target: 'http://127.0.0.1:8080',
+  //     pathRewrite: { '^/laravel': '/' }
+  //   }
+  // },
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
+    'vue-sweetalert2/nuxt'
   ],
+  auth: {
+    watchLoggedIn: true,
+    redirect: {
+      login: '/login',
+      logout: '/login',
+      callback: '/login',
+      home: '/'
+    },
+    strategies: {
+      'laravelSanctum': {
+        provider: 'laravel/sanctum',
+        url: 'http://localhost:8080/api',
+        endpoints: {
+          login: { url: '/login', method: 'post' },
+          logout: { url: '/logout', method: 'post' },
+          user: { url: '/user', method: 'get' }
+        }
+      },
+    },
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
