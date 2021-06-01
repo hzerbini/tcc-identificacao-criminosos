@@ -28,16 +28,10 @@
 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                    <input id="remember_me" v-model="rememberMe" checked name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                    <label for="remember_me" class="ml-2 block text-sm text-gray-900">
-                        Remember me
-                    </label>
-                    </div>
-
-                    <div class="text-sm">
-                    <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-                        Forgot your password?
-                    </a>
+                        <input id="remember_me" v-model="rememberMe" checked name="remember_me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="remember_me" class="ml-2 block text-sm text-gray-900">
+                            Remember me
+                        </label>
                     </div>
                 </div>
 
@@ -73,7 +67,7 @@ export default {
                     password: this.password,
                     rememberMe: this.rememberMe
                 }
-            }) .then(() => {
+            }).then(() => {
                 this.$router.push('/');
                 this.$swal({
                     toast: true,
@@ -82,11 +76,17 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     icon: 'success',
-                    title: 'Signed in successfully',
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
+                    title: 'Login foi realizado com sucesso!',
+                });
+            }).catch(err => {
+                this.$swal({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    icon: 'error',
+                    title: 'Falha ao logar!',
                 });
             });
         }
