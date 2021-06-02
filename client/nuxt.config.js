@@ -5,7 +5,7 @@ export default {
   head: {
     title: 'tcc-identificacao-criminosos',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'pt-br'
     },
     meta: [
       { charset: 'utf-8' },
@@ -52,7 +52,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    'vue-sweetalert2/nuxt'
+    'vue-sweetalert2/nuxt',
   ],
   auth: {
     watchLoggedIn: true,
@@ -70,6 +70,9 @@ export default {
           login: { url: '/login', method: 'post' },
           logout: { url: '/logout', method: 'post' },
           user: { url: '/user', method: 'get' }
+        },
+        user: {
+          property: 'data',
         }
       },
     },

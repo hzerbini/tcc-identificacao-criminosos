@@ -19,6 +19,7 @@
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Calendar</a>
 
                 <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Reports</a>
+
               </div>
             </div>
           </div>
@@ -98,9 +99,7 @@
             <div>
               <div class="text-base font-medium leading-none text-white">{{$auth.user.name}}</div>
               <div class="text-sm font-medium leading-none text-gray-400">{{$auth.user.email}}</div>
-            </div>
-          </div>
-          <div class="mt-3 px-2 space-y-1">
+            </div>      console.log(new Bouncer(this.$auth.user));px-2 space-y-1">
             <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Your Profile</a>
 
             <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Settings</a>
@@ -126,11 +125,16 @@
 </template>
 
 <script>
+import Bouncer from '~/assets/js/Bouncer';
+
 export default{
   data: () => ({
     isOpen: false,
   }),
   methods: {
+    bouncer(){
+      return new Bouncer(this.$auth.user);
+    },
     logout(){
       this.$auth.logout()
       .then(() => {
