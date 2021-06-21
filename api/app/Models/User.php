@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -45,6 +46,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+ * model life cycle event listeners
+ */
+    public static function boot(){
+        parent::boot();
+
+        static::creating(function ($instance){
+            //
+        });
+
+        static::created(function ($user){
+            Bouncer::allow($user)->toOwn(User::class);
+        });
+    }
+
     public function getPermissionsAttribute()
     {
         $abilities = $this->getAbilities()->merge($this->getForbiddenAbilities());
@@ -55,4 +71,5 @@ class User extends Authenticatable
     
         return $abilities;
     }
+
 }

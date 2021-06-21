@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\BouncerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,4 +18,20 @@ use App\Http\Resources\UserResource;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return UserResource::make($request->user());
+});
+
+// Route::group(['middleware' => 'auth:sanctum'], function(){
+Route::group([], function(){
+    Route::group(['prefix' => '/users'], function() {
+        Route::get('/', [UserController::class, 'index'])->middleware('can:viewAll,App\\Models\\User');
+        Route::get('/{user}', [UserController::class, 'show'])->middleware('can:view,user');
+        Route::post('/', [UserController::class, 'store'])->middleware('can:create,App\\Models\\User');
+        Route::patch('/{user}', [UserController::class, 'update'])->middleware('can:update,user');
+        Route::delete('/{user}', [UserController::class, 'destroy'])->middleware('can:delete,user');
+
+        Route::group(['prefix' => '{user}'], function(){
+            Route::post('/allow', [BouncerController::class, 'store'])->middleware('can:managePermissions');
+            Route::delete('/disallow', [BouncerController::class, 'destroy'])->middleware('can:managePermissions');
+        });
+    });
 });
