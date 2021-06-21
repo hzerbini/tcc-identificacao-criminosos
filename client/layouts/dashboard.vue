@@ -10,15 +10,15 @@
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <a href="#" class="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('index')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Dashboard</NuxtLink>
 
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Team</a>
+                <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Usuários</NuxtLink>
 
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Projects</a>
+                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Projects</NuxtLink>
 
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Calendar</a>
+                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Calendar</NuxtLink>
 
-                <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Reports</a>
+                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Reports</NuxtLink>
 
               </div>
             </div>
@@ -84,7 +84,9 @@
       <div v-if="isOpen" class="md:hidden" id="mobile-menu">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <a href="#" class="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+          <NuxtLink to="/" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('index')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Dashboard</NuxtLink>
+
+          <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
 
           <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Team</a>
 
@@ -99,7 +101,7 @@
             <div>
               <div class="text-base font-medium leading-none text-white">{{$auth.user.name}}</div>
               <div class="text-sm font-medium leading-none text-gray-400">{{$auth.user.email}}</div>
-            </div>      console.log(new Bouncer(this.$auth.user));px-2 space-y-1">
+            </div>
             <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Your Profile</a>
 
             <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Settings</a>
@@ -110,17 +112,7 @@
       </div>
     </nav>
 
-
-    <main>
-      <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <!-- Replace with your content
-        <div class="px-4 py-6 sm:px-0">
-          <div class="border-4 border-dashed border-gray-200 rounded-lg h-96"></div>
-        </div>
-        /End replace -->
-        <Nuxt/>
-      </div>
-    </main>
+    <Nuxt/>
   </div>
 </template>
 
@@ -134,6 +126,9 @@ export default{
   methods: {
     bouncer(){
       return new Bouncer(this.$auth.user);
+    },
+    checkMenuOptionActive(option){
+      return (this.$route.name?.split('-')[0] == option);
     },
     logout(){
       this.$auth.logout()
