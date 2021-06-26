@@ -1,7 +1,10 @@
 <template>
     <PageWithHeader>
         <template v-slot:header>Edição de Usuário</template>
-        <template v-slot:header-right>Options</template>
+        <template v-slot:header-right>
+            <NuxtLink :to="`/usuarios/${user.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
+            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteUser(user)">Deletar</button>
+        </template>
         <div class="grid place-items-center h-80" v-if="$fetchState.pending">
             <svg class="animate-spin -ml-1 mr-3 h-1/2 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -178,6 +181,41 @@ export default {
 
                 this.updatePermissions(response.data.data);
             }
+        },
+        deleteUser(){
+            this.$swal({
+                title: 'Tem certeza que deseja remover o usuário?',
+                icon: 'warning',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:'Sim',
+                cancelButtonText:'Não',
+            }).then(result => {
+                if(result.isConfirmed){
+                    this.$axios.delete(`/api/users/${this.user.id}`).then(()=>{
+                        this.$swal({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            icon: 'success',
+                            title: 'Usuário deletado com sucesso!',
+                        });
+                    }).catch(() => {
+                        this.$swal({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            icon: 'error',
+                            title: 'Falha ao deletar usuário!',
+                        });
+                    }).finally(() => this.$fetch());
+                }
+            })
         },
         submit: function(){
             this.$axios.patch(`/api/users/${this.$route.params.userId}`, {
