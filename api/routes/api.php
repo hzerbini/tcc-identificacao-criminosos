@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BouncerController;
+use App\Http\Controllers\FilepondController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
@@ -21,9 +22,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return UserResource::make($request->user());
 });
 
-Route::get('teste', function(){
-    return Storage::allFiles();
-});
+Route::post('/filepond', [FilepondController::class, 'process']);
+Route::get('/filepond', [FilepondController::class, 'restore']);
+Route::delete('/filepond', [FilepondController::class, 'revert']);
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => '/users'], function() {

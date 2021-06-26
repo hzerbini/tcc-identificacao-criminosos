@@ -21,11 +21,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -59,6 +55,12 @@ class User extends Authenticatable
         static::created(function ($user){
             Bouncer::allow($user)->toOwn(User::class);
         });
+    }
+
+
+    public function photos()
+    {
+        return $this->morphMany(Photo::class, 'photable');
     }
 
     public function getPermissionsAttribute()
