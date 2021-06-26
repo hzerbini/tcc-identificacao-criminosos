@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Storage;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,8 +21,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return UserResource::make($request->user());
 });
 
-// Route::group(['middleware' => 'auth:sanctum'], function(){
-Route::group([], function(){
+Route::get('teste', function(){
+    return Storage::allFiles();
+});
+
+Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => '/users'], function() {
         Route::get('/', [UserController::class, 'index'])->middleware('can:viewAll,App\\Models\\User');
         Route::get('/{user}', [UserController::class, 'show'])->middleware('can:view,user');
