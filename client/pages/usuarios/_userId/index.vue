@@ -1,6 +1,10 @@
 <template>
     <PageWithHeader>
         <template v-if="! $fetchState.pending" v-slot:header>{{ user.name }}</template>
+        <template v-slot:header-right>
+            <NuxtLink :to="`/usuarios/${user.id}/editar`" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2">Editar</NuxtLink>
+            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteUser(user)">Deletar</button>
+        </template>
         <div class="grid place-items-center h-80" v-if="$fetchState.pending">
             <svg class="animate-spin -ml-1 mr-3 h-1/2 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -14,12 +18,12 @@
                 <div class="border-t border-gray-200">
                 <dl>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">
-                        Email
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ user.email }}
-                    </dd>
+                        <dt class="text-sm font-medium text-gray-500">
+                            Email
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ user.email }}
+                        </dd>
                     </div>
                     <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">
@@ -35,6 +39,16 @@
                             </ul>
                         </dd>
                     </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Fotos
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 flex justify-center">
+                            <carousel :nav="false" items="1" class="w-64">
+                                <img v-for="photo in user.photos" :src="photo.path" alt=""/>
+                            </carousel>
+                        </dd>
+                    </div>
                 </dl>
                 </div>
             </div>
@@ -44,6 +58,7 @@
 
 <script>
 import Bouncer from '~/assets/js/Bouncer';
+import carousel from 'vue-owl-carousel'
 
 export default {
     layout: 'dashboard',
@@ -56,6 +71,41 @@ export default {
     methods: {
         userPermissions(){
             return new Bouncer(this.user);
+        },
+        deleteUser(){
+            this.$swal({
+                title: 'Tem certeza que deseja remover o usuário?',
+                icon: 'warning',
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:'Sim',
+                cancelButtonText:'Não',
+            }).then(result => {
+                if(result.isConfirmed){
+                    this.$axios.delete(`/api/users/${this.user.id}`).then(()=>{
+                        this.$swal({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            icon: 'success',
+                            title: 'Usuário deletado com sucesso!',
+                        });
+                    }).catch(() => {
+                        this.$swal({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            icon: 'error',
+                            title: 'Falha ao deletar usuário!',
+                        });
+                    }).finally(() => this.$fetch());
+                }
+            })
         }
     },
     async fetch() {
@@ -71,6 +121,7 @@ export default {
             });
             this.$router.push('/usuarios');
         });
-    }
+    },
+    components: { carousel }
 }
 </script>

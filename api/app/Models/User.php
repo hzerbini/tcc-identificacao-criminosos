@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\BouncerFacade as Bouncer;
+use Illuminate\Support\Facades\Storage;
+
 
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -21,11 +23,9 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
+
+    protected $with = ['photos'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -47,8 +47,8 @@ class User extends Authenticatable
     ];
 
     /**
- * model life cycle event listeners
- */
+     * model life cycle event listeners
+     */
     public static function boot(){
         parent::boot();
 
@@ -59,6 +59,21 @@ class User extends Authenticatable
         static::created(function ($user){
             Bouncer::allow($user)->toOwn(User::class);
         });
+
+        static::deleting(function ($user){
+            $user->photos->each->delete();
+        });
+    }
+
+
+    public function photos()
+    {
+        return $this->morphMany(Photo::class, 'photable');
+    }
+
+    public function setPasswordAttribute($password)
+    {
+        $this->attributes['password'] = bcrypt($password);
     }
 
     public function getPermissionsAttribute()

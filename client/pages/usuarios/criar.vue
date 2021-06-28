@@ -1,7 +1,6 @@
 <template>
     <PageWithHeader>
         <template v-slot:header>Criação de Usuário</template>
-        <template v-slot:header-right>OPtions</template>
         <div class="mt-10 sm:mt-0">
             <div class="md:grid md:grid-cols-3 md:gap-6">
                 <div class="md:col-span-1">
@@ -47,6 +46,10 @@
                                     </div>
 
                                 </div>
+                                <div class="my-4">
+                                    <label class="block text-sm font-medium text-gray-700" :class="(errors.name)?'text-red-700':''">Imagens</label>
+                                    <file-pond ref="pond" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
+                                </div>
                             </div>
                             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                                 <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -62,6 +65,22 @@
 </template>
 
 <script>
+// Import FilePond
+import vueFilePond, {setOptions} from 'vue-filepond';
+import FilepondTranslation from '~/assets/js/FilepoundPtBr';
+// // Import plugins
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.esm.js';
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.esm.js';
+
+// Import styles
+import 'filepond/dist/filepond.min.css';
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+
+// Create FilePond component
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+
+setOptions({ ...FilepondTranslation});
+
 export default {
     layout: 'dashboard',
     data: () => ({
@@ -80,6 +99,7 @@ export default {
                 email_confirmation: this.emailConfirmation, 
                 password: this.password,
                 password_confirmation: this.passwordConfirmation,
+                photos: this.$refs.pond.getFiles().map(file => file.serverId)
             }).then(() => {
                 this.$router.push('/usuarios');
                 this.$swal({
@@ -109,6 +129,9 @@ export default {
                 }
             });
         }
-    }
+    },
+    components: {
+        FilePond,
+    },
 }
 </script>

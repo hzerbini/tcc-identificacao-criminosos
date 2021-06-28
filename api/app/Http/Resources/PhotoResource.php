@@ -3,8 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
-class UserResource extends JsonResource
+class PhotoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +16,7 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return array_merge(parent::toArray($request), [
-            'photos' => PhotoResource::collection($this->whenLoaded('photos'))
+            'path' => Storage::temporaryUrl($this->path, now()->addMinute())
         ]);
     }
 }

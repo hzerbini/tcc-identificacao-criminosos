@@ -46,9 +46,7 @@
                 -->
                 <div v-if="isOpen" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                   <!-- Active: "bg-gray-100", Not Active: "" -->
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-
-                  <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+                  <NuxtLink :to="`/usuarios/${this.$auth.user.id}`"><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Seu Perfil</a></NuxtLink>
 
                   <button @click="logout" class="block px-4 py-2 text-sm text-gray-700 focus:outline-none" role="menuitem" tabindex="-1" id="user-menu-item-2">Logout</button>
                 </div>
@@ -102,9 +100,7 @@
               <div class="text-base font-medium leading-none text-white">{{$auth.user.name}}</div>
               <div class="text-sm font-medium leading-none text-gray-400">{{$auth.user.email}}</div>
             </div>
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Your Profile</a>
-
-            <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Settings</a>
+            <NuxtLink :to="`/usuarios/${this.$auth.user.id}`"><a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Seu Perfil</a></NuxtLink>
 
             <button @click="logout" href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">Logout</button>
           </div>

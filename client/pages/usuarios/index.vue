@@ -22,6 +22,9 @@
                                 <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Foto
+                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Nome
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -34,6 +37,14 @@
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="user in data.data" :key="user.email">
+                                    <td class="py-4 px-6 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            <div class="w-12 h-12 rounded-full overflow-hidden">
+                                                <img v-if="user.photos.length > 0" :src="user.photos[0].path" class="w-full h-full object-cover"></img>
+                                                <div v-else class="w-full h-full bg-gray-600"></div>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
                                             {{user.name}}
