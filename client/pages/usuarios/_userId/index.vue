@@ -18,12 +18,12 @@
                 <div class="border-t border-gray-200">
                 <dl>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                    <dt class="text-sm font-medium text-gray-500">
-                        Email
-                    </dt>
-                    <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {{ user.email }}
-                    </dd>
+                        <dt class="text-sm font-medium text-gray-500">
+                            Email
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ user.email }}
+                        </dd>
                     </div>
                     <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">
@@ -39,6 +39,16 @@
                             </ul>
                         </dd>
                     </div>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Fotos
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 flex justify-center">
+                            <carousel :nav="false" items="1" class="w-64">
+                                <img v-for="photo in user.photos" :src="photo.path" alt=""/>
+                            </carousel>
+                        </dd>
+                    </div>
                 </dl>
                 </div>
             </div>
@@ -48,6 +58,7 @@
 
 <script>
 import Bouncer from '~/assets/js/Bouncer';
+import carousel from 'vue-owl-carousel'
 
 export default {
     layout: 'dashboard',
@@ -110,6 +121,7 @@ export default {
             });
             this.$router.push('/usuarios');
         });
-    }
+    },
+    components: { carousel }
 }
 </script>

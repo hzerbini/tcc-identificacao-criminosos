@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -30,6 +31,8 @@ class UserController extends Controller
         $request->validate([
             'email' => 'required|string|email|unique:users,email|max:255',
             'name' => 'required|string|max:255',
+            'photos' => 'required|array',
+            'photos.*' => 'string',
             'password' => [
                 'required',
                 'string',
@@ -43,9 +46,13 @@ class UserController extends Controller
             ]
         ]);
 
-        $user = User::create(array_merge($request->only('email', 'name'), [
-            'password' => bcrypt($request->password)
-        ]));
+        $user = User::create($request->only('email', 'name', 'password'));
+
+        foreach($request->photos as $photo){
+            $user->photos()->create([
+                'path' => $photo
+            ]);
+        }
 
         return UserResource::make($user);
     }
@@ -71,9 +78,9 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => 'nullable|string|max:255',
+            'name' => 'filled|string|max:255',
             'password' => [
-                'nullable',
+                'filled',
                 'string',
                 'confirmed', 
                 Password::min(8)
@@ -85,15 +92,7 @@ class UserController extends Controller
             ]
         ]);
 
-        $data = $request->only('name');
-
-        if($request->password){
-            $data = array_merge($data, [
-                'password' => bcrypt($request->password)
-            ]);
-        }
-
-        $user->fill($data)->save();
+        $user->fill($request->only(['name', 'password']))->save();
 
         return UserResource::make($user);
     }
