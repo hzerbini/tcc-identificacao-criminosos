@@ -14,6 +14,8 @@
 
                 <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Usuários</NuxtLink>
 
+                <NuxtLink to="/suspeitos" v-if="bouncer().can('viewAll', 'App\\Models\\Suspect')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Suspeitos</NuxtLink>
+
                 <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Projects</NuxtLink>
 
                 <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Calendar</NuxtLink>
@@ -86,7 +88,7 @@
 
           <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
 
-          <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Team</a>
+          <NuxtLink to="/suspeitos" v-if="bouncer().can('viewAll', 'App\\Models\\Suspect')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
 
           <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
 

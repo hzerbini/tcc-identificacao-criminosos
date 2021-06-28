@@ -14,9 +14,8 @@ class SuspectResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return array_merge(parent::toArray($request), [
-        //     "birth_date" => $this->birth_date->format('d/m/Y')
-        // ]);
-        return parent::toArray($request);
+        return array_merge(parent::toArray($request), [
+            'photos' => PhotoResource::collection($this->whenLoaded('photos'))
+        ]);
     }
 }

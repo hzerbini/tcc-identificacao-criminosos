@@ -64,9 +64,7 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <!--
-                                            <NuxtLink :to="`/usuarios/${suspect.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
-                                        -->
+                                            <NuxtLink :to="`/suspeitos/${suspect.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
                                             <NuxtLink :to="`/suspeitos/${suspect.id}/editar`" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2">Editar</NuxtLink>
                                             <button class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteSuspect(suspect)">Deletar</button>
                                         </td> 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\BouncerController;
 use App\Http\Controllers\FilepondController;
 use App\Http\Controllers\SuspectController;
+use App\Http\Controllers\SuspectPhotoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
@@ -44,11 +45,16 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     });
 
     Route::group(['prefix' => '/suspects'], function(){
-        Route::get('/', [SuspectController::class, 'index']);
-        Route::get('/{suspect}', [SuspectController::class, 'show']);
-        Route::post('/', [SuspectController::class, 'store']);
-        Route::patch('/{suspect}', [SuspectController::class, 'update']);
-        Route::delete('/{suspect}', [SuspectController::class, 'destroy']);
+        Route::get('/', [SuspectController::class, 'index'])->middleware('can:viewAll,App\\Models\\Suspect');
+        Route::get('/{suspect}', [SuspectController::class, 'show'])->middleware('can:view,suspect');
+        Route::post('/', [SuspectController::class, 'store'])->middleware('can:create,App\\Models\\Suspect');
+        Route::patch('/{suspect}', [SuspectController::class, 'update'])->middleware('can:update,suspect');
+        Route::delete('/{suspect}', [SuspectController::class, 'destroy'])->middleware('can:delete,suspect');
+
+        Route::group(['prefix' => '{suspect}/photos'], function(){
+            Route::post('/', [SuspectPhotoController::class, 'store'])->middleware('can:update,suspect');
+            Route::delete('{photoId}', [SuspectPhotoController::class, 'destroy'])->middleware('can:update,suspect');
+        });
     });
 
     Route::group(['prefix' => 'filepond'], function(){

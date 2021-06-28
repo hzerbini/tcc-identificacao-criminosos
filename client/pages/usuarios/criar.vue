@@ -47,7 +47,7 @@
 
                                 </div>
                                 <div class="my-4">
-                                    <label class="block text-sm font-medium text-gray-700" :class="(errors.name)?'text-red-700':''">Imagens</label>
+                                    <label class="block text-sm font-medium text-gray-700" :class="(errors.photos)?'text-red-700':''">Imagens</label>
                                     <file-pond ref="pond" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
                                 </div>
                             </div>

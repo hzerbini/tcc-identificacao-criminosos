@@ -29,11 +29,18 @@ class SuspectController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'cpf' => 'required|string|cpf|unique:suspects,cpf',
-            'birth_date' => 'required|date'
+            'birth_date' => 'required|date',
+            'photos' => 'array',
+            'photos.*' => 'string'
         ]);
 
         $suspect = Suspect::create($request->only(['name', 'cpf', 'birth_date']));
 
+        foreach($request->photos as $photo){
+            $suspect->photos()->create([
+                'path' => $photo
+            ]);
+        }
 
         return SuspectResource::make($suspect);
     }

@@ -2,9 +2,7 @@
     <PageWithHeader>
         <template v-slot:header>Edição de Suspeito</template>
         <template v-slot:header-right>
-            <!--
-            <NuxtLink :to="`/usuarios/${suspect.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
-            -->
+            <NuxtLink :to="`/suspeitos/${suspect.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
             <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteSuspect(suspect)">Deletar</button>
         </template>
         <div class="grid place-items-center h-80" v-if="$fetchState.pending">
@@ -19,7 +17,7 @@
                 <div class="md:grid md:grid-cols-3 md:gap-6">
                     <div class="md:col-span-1">
                         <div class="px-4 sm:px-0">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">Formulário de Edição do Usuário:</h3>
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Formulário de Edição do Suspeito:</h3>
                             <p class="mt-1 text-sm text-gray-600">
                                 Tome cuidado ao atualizar essas informações.
                             </p>
@@ -60,19 +58,18 @@
                         </form>
                     </div>
                 </div>
-                <!--
-                <hr class="my-8" v-if="user.photos.length > 0"/>
-                <div class="md:grid md:grid-cols-3 md:gap-6" v-if="user.photos.length > 0">
+                <hr class="my-8" v-if="suspect.photos.length > 0"/>
+                <div class="md:grid md:grid-cols-3 md:gap-6" v-if="suspect.photos.length > 0">
                     <div class="md:col-span-1">
                         <div class="px-4 sm:px-0">
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">Remoção Fotos do Usuário:</h3>
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">Remoção Fotos do Suspeito:</h3>
                         </div>
                     </div>
                     <div class="mt-5 md:mt-0 md:col-span-2">
                         <div class="shadow overflow-hidden sm:rounded-md">
                             <div class="px-4 py-5 bg-white sm:p-6 flex justify-center">
-                                <carousel :key="user.photos.length" :nav="false" :items="1" class="w-64">                                
-                                    <div v-for="photo in user.photos" class="relative">
+                                <carousel :key="suspect.photos.length" :nav="false" :items="1" class="w-64">                                
+                                    <div v-for="photo in suspect.photos" class="relative">
                                         <button class="absolute top-0 right-0 px-2 py-1 bg-red-500 rounded-full focus:outline-none focus:ring" @click="deletePhoto(photo)">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -90,16 +87,13 @@
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-1">
                             <div class="px-4 sm:px-0">
-                                <h3 class="text-lg font-medium leading-6 text-gray-900">Adição de Fotos do Usuário:</h3>
-                                <p class="mt-1 text-sm text-gray-600">
-                                    Tome cuidado ao atualizar essas informações.
-                                </p>
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Adição de Fotos do Suspeito:</h3>
                             </div>
                         </div>
                         <div class="mt-5 md:mt-0 md:col-span-2">
                             <form @submit.prevent="submitPhotos" class="shadow overflow-hidden sm:rounded-md">
                                 <div class="px-4 py-5 bg-white sm:p-6">
-                                    <file-pond ref="pond" :key="user.photos.length" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
+                                    <file-pond ref="pond" :key="suspect.photos.length" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
                                 </div>
                                 <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                                     <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -110,7 +104,6 @@
                         </div>
                     </div>
                 </div>
-                -->
             </div>
         </template>
     </PageWithHeader>
@@ -210,7 +203,7 @@ export default {
             })
         },
         submitPhotos: function(){
-            this.$axios.post(`/api/users/${this.user.id}/photos`, {
+            this.$axios.post(`/api/suspects/${this.suspect.id}/photos`, {
                 photos: this.$refs.pond.getFiles().map(file => file.serverId)
             }).then((response) => {
                 this.$swal({
@@ -220,10 +213,10 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     icon: 'success',
-                    title: 'Usuário atualizado com sucesso!',
+                    title: 'Fotos adicionadas com sucesso!',
                 });
 
-                this.user = response.data.data;
+                this.suspect = response.data.data;
             }).catch((err) => {
                 const resp = err.response;
 
@@ -234,7 +227,7 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     icon: 'error',
-                    title: 'Falha ao atualizar usuário!',
+                    title: 'Falha ao adicionar fotos!',
                 });
 
                 if(resp.status == 422){
@@ -244,7 +237,7 @@ export default {
         },
         deletePhoto: function(photo){
             this.$swal({
-                title: 'Tem certeza que deseja remover essa foto do usuário?',
+                title: 'Tem certeza que deseja remover essa foto do suspeito?',
                 icon: 'warning',
                 showCloseButton: true,
                 showCancelButton: true,
@@ -253,7 +246,7 @@ export default {
                 cancelButtonText:'Não',
             }).then(result => {
                 if(result.isConfirmed){
-                    this.$axios.delete(`/api/users/${this.user.id}/photos/${photo.id}`).then((response)=>{
+                    this.$axios.delete(`/api/suspects/${this.suspect.id}/photos/${photo.id}`).then((response)=>{
                         this.$swal({
                             toast: true,
                             position: 'top-end',
@@ -264,7 +257,7 @@ export default {
                             title: 'Foto deletada com sucesso!',
                         });
                         console.log(response.data.data);
-                        this.user = response.data.data;
+                        this.suspect = response.data.data;
                     }).catch(() => {
                         this.$swal({
                             toast: true,

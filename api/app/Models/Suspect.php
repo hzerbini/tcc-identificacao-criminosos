@@ -20,6 +20,15 @@ class Suspect extends Model
         'birth_date'
     ];
 
+    public static function boot(){
+        parent::boot();
+
+        static::deleting(function ($suspect){
+            $suspect->photos->each->delete();
+        });
+    }
+
+
     public function photos()
     {
         return $this->morphMany(Photo::class, 'photable');

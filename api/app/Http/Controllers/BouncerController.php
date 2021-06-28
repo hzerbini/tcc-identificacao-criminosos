@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Suspect;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade as Bouncer;
@@ -17,6 +18,9 @@ class BouncerController extends Controller
             },
             'managePermissions' => function($bouncerInstance){
                 $bouncerInstance->to('managePermissions');
+            },
+            'manageSuspects' => function($bouncerInstance){
+                $bouncerInstance->toManage(Suspect::class);
             }
         ]);
     }
