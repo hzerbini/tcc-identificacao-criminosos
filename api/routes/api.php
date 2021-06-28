@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BouncerController;
 use App\Http\Controllers\FilepondController;
+use App\Http\Controllers\SuspectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
@@ -40,6 +41,14 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::post('/', [UserPhotoController::class, 'store'])->middleware('can:update,user');
             Route::delete('{photoId}', [UserPhotoController::class, 'destroy'])->middleware('can:update,user');
         });
+    });
+
+    Route::group(['prefix' => '/suspects'], function(){
+        Route::get('/', [SuspectController::class, 'index']);
+        Route::get('/{suspect}', [SuspectController::class, 'show']);
+        Route::post('/', [SuspectController::class, 'store']);
+        Route::patch('/{suspect}', [SuspectController::class, 'update']);
+        Route::delete('/{suspect}', [SuspectController::class, 'destroy']);
     });
 
     Route::group(['prefix' => 'filepond'], function(){

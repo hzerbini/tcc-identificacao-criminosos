@@ -1,9 +1,11 @@
 <template>
     <PageWithHeader>
-        <template v-slot:header>Edição de Usuário</template>
+        <template v-slot:header>Edição de Suspeito</template>
         <template v-slot:header-right>
-            <NuxtLink :to="`/usuarios/${user.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
-            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteUser(user)">Deletar</button>
+            <!--
+            <NuxtLink :to="`/usuarios/${suspect.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
+            -->
+            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteSuspect(suspect)">Deletar</button>
         </template>
         <div class="grid place-items-center h-80" v-if="$fetchState.pending">
             <svg class="animate-spin -ml-1 mr-3 h-1/2 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -30,20 +32,21 @@
                                     <div class="grid grid-cols-6 gap-6">
                                         <div class="col-span-12 sm:col-span-6">
                                             <label class="block text-sm font-medium text-gray-700" :class="(errors.name)?'text-red-700':''">Nome</label>
-                                            <input v-model="name" type="text" autocomplete="given-name" 
-                                                class="mt-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                            <input v-model="name" type="text"
+                                                class="mt-1 py-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                                             <p v-if="errors.name" class="text-red-700"> {{ errors.name.join('\n') }}</p>
                                         </div>
 
-                                        <div class="col-span-6 sm:col-span-3">
-                                            <label class="block text-sm font-medium text-gray-700" :class="(errors.password)?'text-red-700':''">Senha</label>
-                                            <input v-model="password" type="password" class="mt-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
-                                            <p v-if="errors.password" class="text-red-700"> {{ errors.password.join('\n') }}</p>
+                                        <div class="col-span-8 sm:col-span-4">
+                                            <label class="block text-sm font-medium text-gray-700" :class="(errors.cpf)?'text-red-700':''">CPF</label>
+                                            <input type="text" v-model="cpf" class="mt-1 py-1 focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                            <p v-if="errors.cpf" class="text-red-700"> {{ errors.cpf.join('\n') }}</p>
                                         </div>
 
-                                        <div class="col-span-6 sm:col-span-3">
-                                            <label class="block text-sm font-medium text-gray-700">Confirmação Senha</label>
-                                            <input v-model="passwordConfirmation" type="password" class="mt-1 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
+                                        <div class="col-span-4 sm:col-span-2">
+                                            <label class="block text-sm font-medium text-gray-700" :class="(errors.birth_date)?'text-red-700':''">Data de Nascimento</label>
+                                            <date-picker v-model="date" format="DD/MM/YYYY"></date-picker>
+                                            <p v-if="errors.birth_date" class="text-red-700"> {{ errors.birth_date.join('\n') }}</p>
                                         </div>
 
                                     </div>
@@ -57,6 +60,7 @@
                         </form>
                     </div>
                 </div>
+                <!--
                 <hr class="my-8" v-if="user.photos.length > 0"/>
                 <div class="md:grid md:grid-cols-3 md:gap-6" v-if="user.photos.length > 0">
                     <div class="md:col-span-1">
@@ -106,43 +110,19 @@
                         </div>
                     </div>
                 </div>
-                <hr class="my-8"/>
-                <div class="mt-10 sm:mt-0" v-if="bouncer().can('managePermissions')">
-                    <div class="md:grid md:grid-cols-3 md:gap-6">
-                        <div class="md:col-span-1">
-                            <div class="px-4 sm:px-0">
-                                <h3 class="text-lg font-medium leading-6 text-gray-900">Atualização de Permissionamento do Usuário:</h3>
-                                <p class="mt-1 text-sm text-gray-600">
-                                    Tome cuidado ao atualizar essas informações.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="mt-5 md:mt-0 md:col-span-2">
-                            <form>
-                                <div class="shadow overflow-hidden sm:rounded-md">
-                                    <div class="px-4 py-5 bg-white sm:p-6">
-                                        <div class="grid grid-cols-6 gap-6">
-                                            <div class="col-span-12 sm:col-span-6 flex">
-                                                <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Usuários:</label>
-                                                <input type="checkbox" v-model="manageUsers" @change="() => changePermission(manageUsers, 'manageUsers')">
-                                            </div>
-                                            <div class="col-span-12 sm:col-span-6 flex">
-                                                <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Permissionamento de usuários:</label>
-                                                <input type="checkbox" v-model="managePermissions"  @change="() => changePermission(managePermissions, 'managePermissions')">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                -->
             </div>
         </template>
     </PageWithHeader>
 </template>
 
 <script>
+// Import DatePicker
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/locale/pt-br';
+import 'vue2-datepicker/index.css';
+
+
 import Bouncer from '~/assets/js/Bouncer';
 import carousel from 'vue-owl-carousel';
 import vueFilePond, {setOptions} from 'vue-filepond';
@@ -163,21 +143,17 @@ setOptions({ ...FilepondTranslation});
 export default {
     layout: 'dashboard',
     data: () => ({
-        user: {},
+        suspect: {},
         name: '',
-        email: '',
-        emailConfirmation: '',
-        password: '',
-        passwordConfirmation: '',
-        errors: {},
-        manageUsers: false,
-        managePermissions: false,
+        cpf: '',
+        date: '',
+        errors: {}
     }),
     watch: {
         '$route.query': '$fetch'
     },
     async fetch() {
-        const data = await this.$axios.get(`/api/users/${this.$route.params.userId}`).then(res => res.data.data).catch(err => {
+        const data = await this.$axios.get(`/api/suspects/${this.$route.params.suspectId}`).then(res => res.data.data).catch(err => {
             this.$swal({
                 toast: true,
                 position: 'top-end',
@@ -190,65 +166,16 @@ export default {
             this.$router.push('/usuarios');
         });
 
-        this.user = data;
+        this.suspect = data;
         this.name = data.name;
+        this.cpf = data.cpf;
+        this.date = new Date(data.birth_date);
 
-        //permissions
-        this.updatePermissions(data);
     },
     methods: {
-        bouncer: function(){
-            return new Bouncer(this.$auth.user);
-        },
-        updatePermissions: function (user){
-            const bouncer = new Bouncer(user);
-            this.manageUsers = bouncer.can('*', 'App\\Models\\User');
-            this.managePermissions = bouncer.can('managePermissions');
-        },
-        changePermission: async function(operation, permission){
-            try{
-                let response;
-                if(operation){
-                    response = await this.$axios.post(`/api/users/${this.$route.params.userId}/allow`, {
-                        permission: permission
-                    });
-                }else{
-                    response = await this.$axios.delete(`/api/users/${this.$route.params.userId}/disallow`, {
-                        data: {
-                            permission: permission
-                        }
-                    });
-                }
-
-                this.$swal({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    icon: 'success',
-                    title: 'Permissões do usuário atualizadas com sucesso!',
-                });
-
-                this.updatePermissions(response.data.data);
-            }catch(err){
-
-                this.$swal({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    icon: 'error',
-                    title: 'Falha ao atualizar permissões do usuário!',
-                });
-
-                this.updatePermissions(response.data.data);
-            }
-        },
-        deleteUser(){
+        deleteSuspect(suspect){
             this.$swal({
-                title: 'Tem certeza que deseja remover o usuário?',
+                title: 'Tem certeza que deseja remover o suspeito?',
                 icon: 'warning',
                 showCloseButton: true,
                 showCancelButton: true,
@@ -257,7 +184,7 @@ export default {
                 cancelButtonText:'Não',
             }).then(result => {
                 if(result.isConfirmed){
-                    this.$axios.delete(`/api/users/${this.user.id}`).then(()=>{
+                    this.$axios.delete(`/api/suspects/${suspect.id}`).then(()=>{
                         this.$swal({
                             toast: true,
                             position: 'top-end',
@@ -265,10 +192,9 @@ export default {
                             timer: 3000,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Usuário deletado com sucesso!',
+                            title: 'Suspeito deletado com sucesso!',
                         });
-
-                        this.$router.push('/usuarios');
+                        this.$router.push('/suspeitos');
                     }).catch(() => {
                         this.$swal({
                             toast: true,
@@ -277,9 +203,9 @@ export default {
                             timer: 3000,
                             timerProgressBar: true,
                             icon: 'error',
-                            title: 'Falha ao deletar usuário!',
+                            title: 'Falha ao deletar suspeito!',
                         });
-                    });
+                    }).finally(() => this.$fetch());
                 }
             })
         },
@@ -354,17 +280,12 @@ export default {
             })
         },
         submit: function(){
-            let data = (this.password)?{
+            this.$axios.patch(`/api/suspects/${this.$route.params.suspectId}`, {
                 name: this.name,
-                password: this.password,
-                password_confirmation: this.passwordConfirmation,
-            }:{
-                name: this.name,
-            };
-
-
-            this.$axios.patch(`/api/users/${this.$route.params.userId}`, data).then(() => {
-                this.$router.push('/usuarios');
+                cpf: this.cpf,
+                birth_date: this.date
+            }).then(() => {
+                this.$router.push('/suspeitos');
                 this.$swal({
                     toast: true,
                     position: 'top-end',
@@ -372,7 +293,7 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     icon: 'success',
-                    title: 'Usuário atualizado com sucesso!',
+                    title: 'Suspeito atualizado com sucesso!',
                 });
             }).catch((err) => {
                 const resp = err.response;
@@ -384,7 +305,7 @@ export default {
                     timer: 3000,
                     timerProgressBar: true,
                     icon: 'error',
-                    title: 'Falha ao atualizar usuário!',
+                    title: 'Falha ao atualizar suspeito!',
                 });
 
                 if(resp.status == 422){
@@ -393,6 +314,6 @@ export default {
             });
         }
     },
-    components: { carousel, FilePond }
+    components: { carousel, FilePond, DatePicker }
 }
 </script>
