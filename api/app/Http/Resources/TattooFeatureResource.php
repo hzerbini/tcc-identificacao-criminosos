@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SuspectResource extends JsonResource
+class TattooFeatureResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,9 +14,6 @@ class SuspectResource extends JsonResource
      */
     public function toArray($request)
     {
-        return array_merge(parent::toArray($request), [
-            'photos' => PhotoResource::collection($this->whenLoaded('photos')),
-            'tattoos' => TattooResource::collection($this->whenLoaded('tattoos'))
-        ]);
+        return parent::toArray($request);
     }
 }

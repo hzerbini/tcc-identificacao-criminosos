@@ -4,6 +4,9 @@ use App\Http\Controllers\BouncerController;
 use App\Http\Controllers\FilepondController;
 use App\Http\Controllers\SuspectController;
 use App\Http\Controllers\SuspectPhotoController;
+use App\Http\Controllers\SuspectTattooController;
+use App\Http\Controllers\TattooController;
+use App\Http\Controllers\TattooFeatureController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
@@ -25,6 +28,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return UserResource::make($request->user());
 });
 
+Route::group(['prefix' => '/tattoo-features'], function(){
+    Route::get('/', [TattooFeatureController::class, 'index']);
+});
+
+Route::group(['prefix' => '/tattoos'], function(){
+    Route::get('/', [TattooController::class, 'index']);
+});
+
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => '/users'], function() {
         Route::get('/', [UserController::class, 'index'])->middleware('can:viewAll,App\\Models\\User');
@@ -42,6 +53,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::post('/', [UserPhotoController::class, 'store'])->middleware('can:update,user');
             Route::delete('{photoId}', [UserPhotoController::class, 'destroy'])->middleware('can:update,user');
         });
+
     });
 
     Route::group(['prefix' => '/suspects'], function(){
@@ -55,7 +67,15 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::post('/', [SuspectPhotoController::class, 'store'])->middleware('can:update,suspect');
             Route::delete('{photoId}', [SuspectPhotoController::class, 'destroy'])->middleware('can:update,suspect');
         });
+
+        Route::group(['prefix' => '{suspect}/tattoos'], function(){
+            Route::post('/', [SuspectTattooController::class, 'store'])->middleware('can:update,suspect');
+            Route::patch('/{tattooId}', [SuspectTattooController::class, 'update'])->middleware('can:update,suspect');
+            Route::delete('{tattooId}', [SuspectTattooController::class, 'destroy'])->middleware('can:update,suspect');
+        });
     });
+
+
 
     Route::group(['prefix' => 'filepond'], function(){
         Route::post('/', [FilepondController::class, 'process']);

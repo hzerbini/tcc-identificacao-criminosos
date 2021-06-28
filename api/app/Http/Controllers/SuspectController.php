@@ -31,7 +31,9 @@ class SuspectController extends Controller
             'cpf' => 'required|string|cpf|unique:suspects,cpf',
             'birth_date' => 'required|date',
             'photos' => 'array',
-            'photos.*' => 'string'
+            'photos.*' => 'string',
+            'tattoos' => 'array',
+            'tattoos.*' => 'string'
         ]);
 
         $suspect = Suspect::create($request->only(['name', 'cpf', 'birth_date']));
@@ -39,6 +41,12 @@ class SuspectController extends Controller
         foreach($request->photos as $photo){
             $suspect->photos()->create([
                 'path' => $photo
+            ]);
+        }
+
+        foreach($request->tattoos as $tattoo){
+            $suspect->tattoos()->create([
+                'path' => $tattoo
             ]);
         }
 

@@ -27,7 +27,6 @@ class Photo extends Model
         if(Storage::move(implode('/',[config('upload.tmp_folder'), $photo]), $path)){
             $this->attributes['path'] = $path;
         }
-
     }
 
     public function photable()

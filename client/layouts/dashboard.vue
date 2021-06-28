@@ -10,25 +10,18 @@
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('index')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Dashboard</NuxtLink>
+                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('index')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Pesquisar</NuxtLink>
 
                 <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Usuários</NuxtLink>
 
                 <NuxtLink to="/suspeitos" v-if="bouncer().can('viewAll', 'App\\Models\\Suspect')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Suspeitos</NuxtLink>
-
-                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Projects</NuxtLink>
-
-                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Calendar</NuxtLink>
-
-                <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Reports</NuxtLink>
-
               </div>
             </div>
           </div>
           <div class="hidden md:block">
             <div class="ml-4 flex items-center md:ml-6">
               <!-- Profile dropdown -->
-              <div class="ml-3 relative">
+              <div class="ml-3 relative z-10">
                 <div>
                   <button @click="isOpen = !isOpen" type="button" class="max-w-xs text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-900 hover:text-white focus:bg-gray-900 focus:text-white focus:outline-none" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                     <span class="sr-only">Open user menu</span>
@@ -90,11 +83,6 @@
 
           <NuxtLink to="/suspeitos" v-if="bouncer().can('viewAll', 'App\\Models\\Suspect')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
 
-          <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
-
-          <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Calendar</a>
-
-          <a href="#" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Reports</a>
         </div>
         <div class="pt-4 pb-3 border-t border-gray-700">
           <div class="flex items-center px-5">
@@ -111,6 +99,7 @@
     </nav>
 
     <Nuxt/>
+    <portal-target name="modals" multiple />
   </div>
 </template>
 

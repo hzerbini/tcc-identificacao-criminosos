@@ -44,7 +44,7 @@
                             Fotos
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 flex justify-center">
-                            <carousel :nav="false" items="1" class="w-64">
+                            <carousel :nav="false" :items="1" class="w-64">
                                 <img v-for="photo in user.photos" :src="photo.path" alt=""/>
                             </carousel>
                         </dd>

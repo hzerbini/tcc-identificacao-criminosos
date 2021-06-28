@@ -12,8 +12,10 @@ class Suspect extends Model
 
     protected $guarded = [];
     protected $with = [
-        'photos'
+        'photos',
+        'tattoos'
     ];
+    
     protected $dates = [
         'created_at',
         'updated_at',
@@ -25,6 +27,7 @@ class Suspect extends Model
 
         static::deleting(function ($suspect){
             $suspect->photos->each->delete();
+            $suspect->tattoos->each->delete();
         });
     }
 
@@ -32,5 +35,10 @@ class Suspect extends Model
     public function photos()
     {
         return $this->morphMany(Photo::class, 'photable');
+    }
+
+    public function tattoos()
+    {
+        return $this->hasMany(Tattoo::class);
     }
 }

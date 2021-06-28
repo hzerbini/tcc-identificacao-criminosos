@@ -37,7 +37,12 @@
                                 </div>
                                 <div class="my-4">
                                     <label class="block text-sm font-medium text-gray-700" :class="(errors.photos)?'text-red-700':''">Fotos do suspeito</label>
-                                    <file-pond ref="pond" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
+                                    <file-pond ref="pondPhoto" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
+                                </div>
+
+                                <div class="my-4">
+                                    <label class="block text-sm font-medium text-gray-700" :class="(errors.tattoos)?'text-red-700':''">Tatuagens</label>
+                                    <file-pond ref="pondTattoo" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
                                 </div>
 
                             </div>
@@ -55,6 +60,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
+import VModal from 'vue-js-modal'
+
+Vue.use(VModal)
+
 // Import DatePicker
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/locale/pt-br';
@@ -91,7 +101,8 @@ export default {
                 name: this.name,
                 cpf: this.cpf, 
                 birth_date: this.date, 
-                photos: this.$refs.pond.getFiles().map(file => file.serverId)
+                photos: this.$refs.pondPhoto.getFiles().map(file => file.serverId),
+                tattoos: this.$refs.pondTattoo.getFiles().map(file => file.serverId),
             }).then(() => {
                 this.$router.push('/suspeitos');
                 this.$swal({

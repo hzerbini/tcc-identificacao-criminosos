@@ -11,19 +11,19 @@
     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
       <div>
         <p class="text-sm text-gray-700">
-          Showing
+          Mostrando
           {{ ' ' }}
           <span class="font-medium">{{meta.from}}</span>
           {{ ' ' }}
-          to
+          até
           {{ ' ' }}
           <span class="font-medium">{{ meta.to }}</span>
           {{ ' ' }}
-          of
+          de
           {{ ' ' }}
           <span class="font-medium">{{ meta.total }}</span>
           {{ ' ' }}
-          results
+          resultados
         </p>
       </div>
       <div>

@@ -38,8 +38,23 @@
                             Fotos
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 flex justify-center">
-                            <carousel :nav="false" items="1" class="w-64">
+                            <carousel :nav="false" :items="1" class="w-64">
                                 <img v-for="photo in suspect.photos" :src="photo.path" alt=""/>
+                            </carousel>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Tatuagens
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 flex justify-center">
+                            <carousel :nav="false" :items="1" class="w-64">
+                                    <div class="relative w-64 h-64" v-for="tattoo in suspect.tattoos">
+                                        <img :src="tattoo.path" class="h-full w-full object-cover">
+                                        <div class="absolute flex bottom-0 left-0 flex flex-wrap w-64">
+                                            <p class="my-2 mx-2 bg-gray-200 rounded-sm px-2 py-1" v-for="feature in tattoo.features">{{ feature.name }}</p>
+                                        </div>
+                                    </div>
                             </carousel>
                         </dd>
                     </div>
