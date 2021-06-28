@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <hr class="my-8"/>
-                <div class="mt-10 sm:mt-0" v-if="bouncer().can('managePermissions')">
+                <div class="mt-10 sm:mt-0">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-1">
                             <div class="px-4 sm:px-0">
@@ -130,6 +130,10 @@
                                                 <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Permissionamento de usuários:</label>
                                                 <input type="checkbox" v-model="managePermissions"  @change="() => changePermission(managePermissions, 'managePermissions')">
                                             </div>
+                                            <div class="col-span-12 sm:col-span-6 flex">
+                                                <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Suspeitos:</label>
+                                                <input type="checkbox" v-model="manageSuspects"  @change="() => changePermission(manageSuspects, 'manageSuspects')">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -172,6 +176,7 @@ export default {
         errors: {},
         manageUsers: false,
         managePermissions: false,
+        manageSuspects: false
     }),
     watch: {
         '$route.query': '$fetch'
@@ -204,6 +209,7 @@ export default {
             const bouncer = new Bouncer(user);
             this.manageUsers = bouncer.can('*', 'App\\Models\\User');
             this.managePermissions = bouncer.can('managePermissions');
+            this.manageSuspects = bouncer.can('*', 'App\\Models\\Suspect');
         },
         changePermission: async function(operation, permission){
             try{

@@ -1,9 +1,9 @@
 <template>
     <PageWithHeader>
-        <template v-if="! $fetchState.pending" v-slot:header>{{ user.name }}</template>
+        <template v-if="! $fetchState.pending" v-slot:header>{{ suspect.name }}</template>
         <template v-slot:header-right>
-            <NuxtLink :to="`/usuarios/${user.id}/editar`" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2">Editar</NuxtLink>
-            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteUser(user)">Deletar</button>
+            <NuxtLink :to="`/suspeitos/${suspect.id}/editar`" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2">Editar</NuxtLink>
+            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteSuspect(suspect)">Deletar</button>
         </template>
         <div class="grid place-items-center h-80" v-if="$fetchState.pending">
             <svg class="animate-spin -ml-1 mr-3 h-1/2 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -19,24 +19,18 @@
                 <dl>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">
-                            Email
+                            CPF
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            {{ user.email }}
+                            {{ suspect.cpf }}
                         </dd>
                     </div>
                     <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                         <dt class="text-sm font-medium text-gray-500">
-                            Permissões:
+                            Data de Nascimento
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <span v-if="userPermissions().can('*')">
-                                Esse usuário tem permissão para executar tudo no sistema.
-                            </span>
-                            <ul v-else>
-                                <li v-if="userPermissions().can('*', 'App\\Models\\User')">Gerenciar Usuários</li>
-                                <li v-if="userPermissions().can('managePermissions')">Gerenciar Permissionamento de Usuários</li>
-                            </ul>
+                            {{ getSuspectDate(suspect) }}
                         </dd>
                     </div>
                     <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -45,7 +39,22 @@
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 flex justify-center">
                             <carousel :nav="false" :items="1" class="w-64">
-                                <img v-for="photo in user.photos" :src="photo.path" alt=""/>
+                                <img v-for="photo in suspect.photos" :src="photo.path" alt=""/>
+                            </carousel>
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">
+                            Tatuagens
+                        </dt>
+                        <dd class="mt-1 text-sm text-gray-900 flex justify-center">
+                            <carousel :nav="false" :items="1" class="w-64">
+                                    <div class="relative w-64 h-64" v-for="tattoo in suspect.tattoos">
+                                        <img :src="tattoo.path" class="h-full w-full object-cover">
+                                        <div class="absolute flex bottom-0 left-0 flex flex-wrap w-64">
+                                            <p class="my-2 mx-2 bg-gray-200 rounded-sm px-2 py-1" v-for="feature in tattoo.features">{{ feature.name }}</p>
+                                        </div>
+                                    </div>
                             </carousel>
                         </dd>
                     </div>
@@ -63,18 +72,19 @@ import carousel from 'vue-owl-carousel'
 export default {
     layout: 'dashboard',
     data: () => ({
-        user: {},
+        suspect: {},
     }),
     watch: {
         '$route.query': '$fetch'
     },
     methods: {
-        userPermissions(){
-            return new Bouncer(this.user);
+        getSuspectDate(suspect){
+            const data = new Date(suspect.birth_date);
+            return [data.getDate(),data.getMonth() + 1, data.getFullYear()].join('/');
         },
-        deleteUser(){
+        deleteSuspect(suspect){
             this.$swal({
-                title: 'Tem certeza que deseja remover o usuário?',
+                title: 'Tem certeza que deseja remover o suspeito?',
                 icon: 'warning',
                 showCloseButton: true,
                 showCancelButton: true,
@@ -83,7 +93,7 @@ export default {
                 cancelButtonText:'Não',
             }).then(result => {
                 if(result.isConfirmed){
-                    this.$axios.delete(`/api/users/${this.user.id}`).then(()=>{
+                    this.$axios.delete(`/api/suspects/${suspect.id}`).then(()=>{
                         this.$swal({
                             toast: true,
                             position: 'top-end',
@@ -91,8 +101,9 @@ export default {
                             timer: 3000,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Usuário deletado com sucesso!',
+                            title: 'Suspeito deletado com sucesso!',
                         });
+                        this.$router.push('/suspeitos');
                     }).catch(() => {
                         this.$swal({
                             toast: true,
@@ -101,15 +112,15 @@ export default {
                             timer: 3000,
                             timerProgressBar: true,
                             icon: 'error',
-                            title: 'Falha ao deletar usuário!',
+                            title: 'Falha ao deletar suspeito!',
                         });
                     }).finally(() => this.$fetch());
                 }
             })
-        }
+        },
     },
     async fetch() {
-        this.user = await this.$axios.get(`/api/users/${this.$route.params.userId}`).then(res => res.data.data).catch(err => {
+        this.suspect = await this.$axios.get(`/api/suspects/${this.$route.params.suspectId}`).then(res => res.data.data).catch(err => {
             this.$swal({
                 toast: true,
                 position: 'top-end',
@@ -117,9 +128,9 @@ export default {
                 timer: 3000,
                 timerProgressBar: true,
                 icon: 'error',
-                title: 'Falha ao buscar usuário!',
+                title: 'Falha ao buscar suspeito!',
             });
-            this.$router.push('/usuarios');
+            this.$router.push('/suspeitos');
         });
     },
     components: { carousel }
