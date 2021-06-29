@@ -34,6 +34,8 @@ class TattooController extends Controller
                 ->pluck('tattoo_id');
 
             $tattoos = Tattoo::orderBy('id')->whereIn('id', $tattooIds)->paginate(10);
+
+            return TattooResource::collection($tattoos);
         }
 
         return TattooResource::collection(Tattoo::paginate(10));

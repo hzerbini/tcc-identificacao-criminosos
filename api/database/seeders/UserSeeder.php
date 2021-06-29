@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
         $user = User::create([
             'name' => 'Admin',
             'email' => 'admin@admin.com.br',
-            'password' => bcrypt('admin123'),
+            'password' => 'admin123',
         ]);
 
         Bouncer::allow($user)->everything();
