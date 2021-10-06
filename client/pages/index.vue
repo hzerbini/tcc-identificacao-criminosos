@@ -4,29 +4,36 @@
       <div class="p-6 flex justify-center">
             <div class="relative ml-7 mr-12 w-full">
               <input type="text" v-model="search" @focus="openFeatures" @blur="closeFeatures" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full h-full sm:text-sm border-gray-300 rounded-md" />
-              <ul v-show="tattoo_features.length > 0 && isOpen" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
-              <!--
-                Select option, manage highlight styles based on mouseenter/mouseleave and keyboard navigation.
+                <div v-show="isOpen">
+                    <ul v-if="tattoo_features.length == 0 && search.length > 3" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+                        <li class="text-gray-900 cursor-default select-none relative" role="option">
+                            {{ (loadingFeatures)?"carregando...":"Nenhum filtro corresponde a sua pesquisa." }}
+                        </li>
+                    </ul>
+                    <ul v-else-if="tattoo_features. length > 0" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+                    <!--
+                        Select option, manage highlight styles based on mouseenter/mouseleave and keyboard navigation.
 
-                Highlighted: "text-white bg-indigo-600", Not Highlighted: "text-gray-900"
-              -->
-                <li v-for="feature in tattoo_features" class="text-gray-900 cursor-default select-none relative" id="listbox-option-0" role="option">
-                  <button class="w-full h-full py-2 pl-3 pr-9 hover:bg-gray-200 focus:outline-none" @click="addFeature(feature)">
-                    <div class="flex items-center">
-                      <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
-                      <span class="font-normal ml-3 block truncate hover:font-semibold">
-                          {{feature}}
-                      </span>
-                    </div>
-                  </button>
-                </li>
+                        Highlighted: "text-white bg-indigo-600", Not Highlighted: "text-gray-900"
+                    -->
+                        <li v-for="feature in tattoo_features" class="text-gray-900 cursor-default select-none relative" id="listbox-option-0" role="option">
+                        <button class="w-full h-full py-2 pl-3 pr-9 hover:bg-gray-200 focus:outline-none" @click="addFeature(feature)">
+                            <div class="flex items-center">
+                            <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
+                            <span class="font-normal ml-3 block truncate hover:font-semibold">
+                                {{feature}}
+                            </span>
+                            </div>
+                        </button>
+                        </li>
 
-                <!-- More items... -->
-              </ul>
+                    <!-- More items... -->
+                    </ul>
+                </div>
             </div>
             <button class="bg-indigo-800 p-2 pt-3 font-semibold text-lg text-white ml-4 rounded-md" @click="$fetch">Procurar</button>
       </div>
-      <div class="flex flex-wrap gap-4 px-2 py-1 text-white"> 
+      <div class="flex flex-wrap gap-4 px-2 py-1 text-white">
           <button v-for="feature in features" class="focus:outline-none"  @click="() => {features = features.filter(f => f !== feature)}"> {{ feature }} x</button>
       </div>
     </div>
@@ -69,12 +76,14 @@ export default {
     'isOpen': false,
     'tattoos': [],
     'meta': null,
+    'loadingFeatures' : false,
   }),
   watch: {
     '$route.query': '$fetch',
+    features: '$fetch',
     search: function (search){
       if (search.length >= 3) {
-
+        this.loadingFeatures = true;
         if (this.timerId) {
             clearTimeout(this.timerId);
         }
@@ -105,8 +114,6 @@ export default {
           });
           this.$router.push('/');
       });
-      console.log(data);
-      console.log(data);
       this.tattoos = data.data;
       this.meta = data.meta;
   },
@@ -121,12 +128,14 @@ export default {
       this.timerDropdown = setTimeout(() => {this.isOpen = false;}, 1000);
     },
     searchTattooFeatures(){
+        this.loadingFeatures = true;
       this.$axios.get('api/tattoo-features', {
         params: {
           search: this.search
         }
       }).then(response => {
         this.tattoo_features = response.data.data.map(feature => feature.name);
+        this.loadingFeatures = false;
       });
     },
     addFeature(feature){

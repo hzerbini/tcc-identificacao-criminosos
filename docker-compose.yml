@@ -19,6 +19,7 @@ services:
     depends_on:
       - client
       - php
+      - python
 
   # PHP FastCGI Process Manager container
   php:
@@ -37,19 +38,34 @@ services:
       - redis
       - mailhog
 
-  # Supervisor container (schedule and queue runner)
-  supervisor:
+  python:
     build:
-      context: docker/dev/supervisor
+      context: docker/dev/python
       dockerfile: Dockerfile
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - count: 0
+              capabilities: [gpu]
+    ports:
+      - 5000:5000
     volumes:
-      - ./:/var/www/
-      - ./docker/dev/supervisor/conf.d:/etc/supervisor/conf.d
-      - ./docker/dev/supervisor/logs:/var/log
-    depends_on:
-      - postgres
-      - redis
-      - mailhog
+      - ./python:/var/www/python
+
+  # Supervisor container (schedule and queue runner)
+  # supervisor:
+  #   build:
+  #     context: docker/dev/supervisor
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./:/var/www/
+  #     - ./docker/dev/supervisor/conf.d:/etc/supervisor/conf.d
+  #     - ./docker/dev/supervisor/logs:/var/log
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - mailhog
 
   # PostgreSQL database container
   postgres:

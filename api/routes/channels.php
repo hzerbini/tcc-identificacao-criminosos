@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Alert;
 use Illuminate\Support\Facades\Broadcast;
+use PhpParser\Node\Expr\FuncCall;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,12 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('alerts.{userId}', function ($user, $userId) {
+
+    return (int) $user->id === (int) $userId || Bouncer::can('viewAll', Alert::class);
+});
+
+Broadcast::channel('alerts', function ($user) {
+
+    return Bouncer::can('viewAll', Alert::class);
 });

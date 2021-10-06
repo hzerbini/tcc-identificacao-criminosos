@@ -42,7 +42,7 @@
 
                                 <div class="my-4">
                                     <label class="block text-sm font-medium text-gray-700" :class="(errors.tattoos)?'text-red-700':''">Tatuagens</label>
-                                    <file-pond ref="pondTattoo" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
+                                    <file-pond ref="pondTattoo" image-crop-aspect-ratio="1" allow-image-crop="true" allow-multiple="true" accepted-file-types="image/*" server="/api/filepond" />
                                 </div>
 
                             </div>

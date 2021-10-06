@@ -30,12 +30,12 @@
                             Permissões:
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <span v-if="userPermissions().can('*')">
+                            <span v-if="$bouncer.can('*')">
                                 Esse usuário tem permissão para executar tudo no sistema.
                             </span>
                             <ul v-else>
-                                <li v-if="userPermissions().can('*', 'App\\Models\\User')">Gerenciar Usuários</li>
-                                <li v-if="userPermissions().can('managePermissions')">Gerenciar Permissionamento de Usuários</li>
+                                <li v-if="$bouncer.can('*', 'App\\Models\\User')">Gerenciar Usuários</li>
+                                <li v-if="$bouncer.can('managePermissions')">Gerenciar Permissionamento de Usuários</li>
                             </ul>
                         </dd>
                     </div>
@@ -69,9 +69,6 @@ export default {
         '$route.query': '$fetch'
     },
     methods: {
-        userPermissions(){
-            return new Bouncer(this.user);
-        },
         deleteUser(){
             this.$swal({
                 title: 'Tem certeza que deseja remover o usuário?',

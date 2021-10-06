@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TattooFeature;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Artisan;
 
 class Tattoo extends Model
 {
@@ -18,27 +20,9 @@ class Tattoo extends Model
         parent::boot();
 
         static::created(function($tattoo){
-            $features = collect([
-                "Old school", "New School", "Bold Line", "Neo Tradicional", "Tribal", "Oriental", 
-                "Pontilhismo e Geométrico", "Biomecânico", "Aquarela", "Blackwork", "Lettering",
-                "Realismo e Portrait", "Preto e Cinza"
+            Artisan::call('tattoo:elementRecognition', [
+                'tattooId' => $tattoo->id
             ]);
-            $featureIds = [];
-            $newFeatures = [];
-            $num = rand(0,5);
-            for($i = 0; $i < $num; $i++){
-                $newFeatures[] = $features->get(rand(0, $features->count() - 1), "Old school");
-            };
-
-            foreach($newFeatures as $feature){
-                $feature = TattooFeature::firstOrCreate([
-                    'name' => $feature
-                ]);
-    
-                $featureIds[] = $feature->id;
-            }
-
-            $tattoo->features()->sync($featureIds ?? []);
         });
 
         static::deleting(function ($photo){

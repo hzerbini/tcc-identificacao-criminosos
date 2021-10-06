@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <hr class="my-8"/>
-                <div class="mt-10 sm:mt-0" v-if="bouncer().can('managePermissions')">
+                <div class="mt-10 sm:mt-0" v-if="$bouncer.can('managePermissions')">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="md:col-span-1">
                             <div class="px-4 sm:px-0">
@@ -133,6 +133,10 @@
                                             <div class="col-span-12 sm:col-span-6 flex">
                                                 <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Suspeitos:</label>
                                                 <input type="checkbox" v-model="manageSuspects"  @change="() => changePermission(manageSuspects, 'manageSuspects')">
+                                            </div>
+                                            <div class="col-span-12 sm:col-span-6 flex">
+                                                <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Alertas:</label>
+                                                <input type="checkbox" v-model="manageAlerts"  @change="() => changePermission(manageAlerts, 'manageAlerts')">
                                             </div>
                                         </div>
                                     </div>
@@ -176,7 +180,8 @@ export default {
         errors: {},
         manageUsers: false,
         managePermissions: false,
-        manageSuspects: false
+        manageSuspects: false,
+        manageAlerts: false,
     }),
     watch: {
         '$route.query': '$fetch'
@@ -202,14 +207,11 @@ export default {
         this.updatePermissions(data);
     },
     methods: {
-        bouncer: function(){
-            return new Bouncer(this.$auth.user);
-        },
         updatePermissions: function (user){
-            const bouncer = new Bouncer(user);
-            this.manageUsers = bouncer.can('*', 'App\\Models\\User');
-            this.managePermissions = bouncer.can('managePermissions');
-            this.manageSuspects = bouncer.can('*', 'App\\Models\\Suspect');
+            this.manageUsers = this.$bouncer.can('*', 'App\\Models\\User');
+            this.managePermissions = this.$bouncer.can('managePermissions');
+            this.manageSuspects = this.$bouncer.can('*', 'App\\Models\\Suspect');
+            this.manageAlerts = this.$bouncer.can('*', 'App\\Models\\Alert');
         },
         changePermission: async function(operation, permission){
             try{

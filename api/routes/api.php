@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlertController;
 use App\Http\Controllers\BouncerController;
 use App\Http\Controllers\FilepondController;
 use App\Http\Controllers\SuspectController;
@@ -12,7 +13,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPhotoController;
+use App\Http\Controllers\UserAlertController;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Broadcast;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,20 +26,24 @@ use Illuminate\Support\Facades\Storage;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
+require base_path('routes/channels.php');
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return UserResource::make($request->user());
 });
 
-Route::group(['prefix' => '/tattoo-features'], function(){
-    Route::get('/', [TattooFeatureController::class, 'index']);
-});
-
-Route::group(['prefix' => '/tattoos'], function(){
-    Route::get('/', [TattooController::class, 'index']);
-});
-
 Route::group(['middleware' => 'auth:sanctum'], function(){
+    
+    Route::group(['prefix' => '/tattoo-features'], function(){
+        Route::get('/', [TattooFeatureController::class, 'index']);
+    });
+    
+    Route::group(['prefix' => '/tattoos'], function(){
+        Route::get('/', [TattooController::class, 'index']);
+    });
+
     Route::group(['prefix' => '/users'], function() {
         Route::get('/', [UserController::class, 'index'])->middleware('can:viewAll,App\\Models\\User');
         Route::get('/{user}', [UserController::class, 'show'])->middleware('can:view,user');
@@ -54,6 +61,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::delete('{photoId}', [UserPhotoController::class, 'destroy'])->middleware('can:update,user');
         });
 
+        Route::group(['prefix' => '{user}/alerts'], function(){
+            Route::get('/', [UserAlertController::class, 'index'])->middleware('ifNotUserAuthorize:user,viewAll,App\\Models\\Alert');
+            Route::post('/', [UserAlertController::class, 'store'])->middleware('can:create,App\\Models\\Alert');
+        });
     });
 
     Route::group(['prefix' => '/suspects'], function(){
@@ -75,6 +86,12 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         });
     });
 
+    Route::group(['prefix' => 'alerts'], function(){
+        Route::get('/', [AlertController::class, 'index'])->middleware('can:viewAll,App\\Models\\Alert');
+        Route::get('/{alert}', [AlertController::class, 'show'])->middleware('can:view,alert');
+        Route::patch('/{alert}', [AlertController::class, 'update'])->middleware('can:view,alert');
+        Route::delete('/{alert}', [AlertController::class, 'destroy'])->middleware('can:delete,alert');
+    });
 
 
     Route::group(['prefix' => 'filepond'], function(){

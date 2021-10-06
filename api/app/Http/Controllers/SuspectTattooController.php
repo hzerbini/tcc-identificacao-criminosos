@@ -68,7 +68,7 @@ class SuspectTattooController extends Controller
 
         $tattoo = $suspect->tattoos()->findOrFail($tattooId);
         $features = [];
-        dd($features);
+
         foreach($request->tattoo_features as $feature){
             $feature = $tattoo->features()->firstOrCreate([
                 'name' => $feature

@@ -58,6 +58,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <NuxtLink :to="`/usuarios/${user.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
                                         <NuxtLink :to="`/usuarios/${user.id}/editar`" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2">Editar</NuxtLink>
+                                        <NuxtLink :to="`/usuarios/${user.id}/alertas`" class="text-indigo-600 hover:text-indigo-900 mx-2">Alertas</NuxtLink>
                                         <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteUser(user)">Deletar</button>
                                     </td>
                                 </tr>

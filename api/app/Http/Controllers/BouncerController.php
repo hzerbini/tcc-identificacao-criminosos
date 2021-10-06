@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Alert;
 use App\Models\Suspect;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,6 +22,9 @@ class BouncerController extends Controller
             },
             'manageSuspects' => function($bouncerInstance){
                 $bouncerInstance->toManage(Suspect::class);
+            },
+            'manageAlerts' => function($bouncerInstance){
+                $bouncerInstance->toManage(Alert::class);
             }
         ]);
     }

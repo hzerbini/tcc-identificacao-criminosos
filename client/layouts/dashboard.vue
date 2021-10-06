@@ -12,9 +12,12 @@
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
                 <NuxtLink to="/" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('index')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Pesquisar</NuxtLink>
 
-                <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Usuários</NuxtLink>
+                <NuxtLink to="/usuarios" v-if="$bouncer.can('viewAll', 'App\\Models\\User')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Usuários</NuxtLink>
 
-                <NuxtLink to="/suspeitos" v-if="bouncer().can('viewAll', 'App\\Models\\Suspect')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Suspeitos</NuxtLink>
+                <NuxtLink to="/suspeitos" v-if="$bouncer.can('viewAll', 'App\\Models\\Suspect')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Suspeitos</NuxtLink>
+              
+                <NuxtLink to="/alertas" v-if="$bouncer.can('viewAll', 'App\\Models\\Alert')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('alertas')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Alertas</NuxtLink>
+
               </div>
             </div>
           </div>
@@ -42,6 +45,7 @@
                 <div v-if="isOpen" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                   <!-- Active: "bg-gray-100", Not Active: "" -->
                   <NuxtLink :to="`/usuarios/${this.$auth.user.id}`"><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Seu Perfil</a></NuxtLink>
+                    <NuxtLink :to="`/usuarios/${this.$auth.user.id}/alertas`"><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Alertas</a></NuxtLink>
 
                   <button @click="logout" class="block px-4 py-2 text-sm text-gray-700 focus:outline-none" role="menuitem" tabindex="-1" id="user-menu-item-2">Logout</button>
                 </div>
@@ -79,9 +83,11 @@
           <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
           <NuxtLink to="/" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('index')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Dashboard</NuxtLink>
 
-          <NuxtLink to="/usuarios" v-if="bouncer().can('viewAll', 'App\\Models\\User')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
+          <NuxtLink to="/usuarios" v-if="$bouncer.can('viewAll', 'App\\Models\\User')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('usuarios')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
 
-          <NuxtLink to="/suspeitos" v-if="bouncer().can('viewAll', 'App\\Models\\Suspect')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Usuários </NuxtLink>
+          <NuxtLink to="/suspeitos" v-if="$bouncer.can('viewAll', 'App\\Models\\Suspect')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Suspeitos </NuxtLink>
+
+          <NuxtLink to="/alertas" v-if="$bouncer.can('viewAll', 'App\\Models\\Alert')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('alertas')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Alertas </NuxtLink>
 
         </div>
         <div class="pt-4 pb-3 border-t border-gray-700">
@@ -97,23 +103,51 @@
         </div>
       </div>
     </nav>
-
     <Nuxt/>
+    <button class="fixed transition-all ease-in-out duration-1000 bottom-0 right-0 mx-8 my-8 p-4 bg-yellow-400 rounded-full animate-bounce" :class="(newAlertId == null)?'opacity-0 pointer-events-none':'opacity-100'" @click="() => $modal.show('dashboardAlertModal')">
+        <AlertIcon class="text-white w-10 h-10 animate-pulse"/>
+    </button>
+    <AlertModal :key="newAlertId" name="dashboardAlertModal" :alert="newAlert" @closed="() => newAlertId = null"/>
     <portal-target name="modals" multiple />
+
   </div>
 </template>
 
 <script>
-import Bouncer from '~/assets/js/Bouncer';
-
 export default{
   data: () => ({
     isOpen: false,
+    newAlertId: null
   }),
+  computed: {
+      newAlert(){
+          console.log(this.newAlertId);
+          return {
+              id: this.newAlertId
+          };
+      }
+  },
+  mounted (){
+      this.$echo.private(`alerts.${this.$auth.user.id}`)
+        .listen('NewAlertSent', (e) => {
+            this.$swal({
+              toast: true,
+              position: 'top-end',
+              icon: 'info',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+              title: 'Novo Alerta!',
+          });
+          this.newAlertId = e.alertId;
+          console.log("foi porra", e);
+          console.log(this.newAlertId)
+        });
+  },
+  beforeDestroy(){
+      this.$echo.leave(`alerts.${this.$auth.user.id}`);
+  },
   methods: {
-    bouncer(){
-      return new Bouncer(this.$auth.user);
-    },
     checkMenuOptionActive(option){
       return (this.$route.name?.split('-')[0] == option);
     },

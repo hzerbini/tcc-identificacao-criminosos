@@ -8,13 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Silber\Bouncer\BouncerFacade as Bouncer;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\HasApiTokens;
 
 
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRolesAndAbilities;
+    use HasFactory, Notifiable, HasRolesAndAbilities, HasApiTokens;
 
     protected $appends = ['permissions'];
 
@@ -58,13 +59,21 @@ class User extends Authenticatable
 
         static::created(function ($user){
             Bouncer::allow($user)->toOwn(User::class);
+            Bouncer::allow($user)->toOwn(Alert::class)->to([
+                'view', 'delete'
+            ]);
         });
 
         static::deleting(function ($user){
             $user->photos->each->delete();
+            $user->alerts->each->delete();
         });
     }
 
+    public function alerts()
+    {
+        return $this->hasMany(Alert::class);
+    }
 
     public function photos()
     {
