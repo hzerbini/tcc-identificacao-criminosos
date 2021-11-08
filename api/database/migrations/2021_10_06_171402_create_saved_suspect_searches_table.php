@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTattooFeaturesTable extends Migration
+class CreateSavedSuspectSearchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateTattooFeaturesTable extends Migration
      */
     public function up()
     {
-        Schema::create('tattoo_features', function (Blueprint $table) {
+        Schema::create('saved_suspect_searches', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->string('name_slug')->unique()->index();
+            $table->foreignId('user_id')->constrained();
+            $table->string('name', 64);
+            $table->string('description');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateTattooFeaturesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tattoo_features');
+        Schema::dropIfExists('saved_suspect_searches');
     }
 }

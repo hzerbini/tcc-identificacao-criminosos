@@ -31,7 +31,7 @@
                     </ul>
                 </div>
             </div>
-            <button class="bg-indigo-800 p-2 pt-3 font-semibold text-lg text-white ml-4 rounded-md" @click="$fetch">Procurar</button>
+            <button class="bg-indigo-800 p-2 px-4 font-semibold text-lg text-white ml-4 rounded-md" @click="saveSearch">+</button>
       </div>
       <div class="flex flex-wrap gap-4 px-2 py-1 text-white">
           <button v-for="feature in features" class="focus:outline-none"  @click="() => {features = features.filter(f => f !== feature)}"> {{ feature }} x</button>
@@ -57,7 +57,7 @@
             </div>
           </carousel>
         </div>
-        <Paginator class="mt-32" :meta="meta"/>
+        <Paginator class="absolute bottom-0 w-full z-20" :meta="meta"/>
       </div>
     </main>
 
@@ -126,6 +126,55 @@ export default {
     },
     closeFeatures(){
       this.timerDropdown = setTimeout(() => {this.isOpen = false;}, 1000);
+    },
+    saveSearch(){
+        this.$swal({
+            title: 'Salvar Pesquisa',
+            html: `<input type="text" id="saveSearchNameInput" class="swal2-input" placeholder="Nome">
+                <input type="text" id="saveSearchDescriptionInput" class="swal2-input" placeholder="Descrição">`,
+            confirmButtonText: 'Salvar',
+            focusConfirm: false,
+            preConfirm: () => {
+                const name = this.$swal.getPopup().querySelector('#saveSearchNameInput').value
+                const description = this.$swal.getPopup().querySelector('#saveSearchDescriptionInput').value
+                if (!description || !name) {
+                    this.$swal.showValidationMessage(`Por favor, insira nome e descrição para pesquisa.`);
+                }
+                if(this.features.length <= 0){
+                    this.$swal.showValidationMessage(`Você não pode salvar uma pesquisa sem nenhum parâmetro.`);
+                }
+                return { name, description}
+            }
+        }).then((result) => {
+            this.$axios.post(`api/users/${this.$auth.user.id}/saved-suspect-searches`, {
+                name: result.value.name,
+                description: result.value.description,
+                tattooFeatures: this.features
+            }).then(response => {
+                this.$swal({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    icon: 'success',
+                    title: 'Pesquisa salva com sucesso!',
+                });
+            }).catch(err => {
+                const response = err.response;
+                if(response.status == 422){
+                    this.$swal({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        icon: 'error',
+                        title: 'Erro ao salvar pesquisa!',
+                    });
+                }
+            });
+        });
     },
     searchTattooFeatures(){
         this.loadingFeatures = true;

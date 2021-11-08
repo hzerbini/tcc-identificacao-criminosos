@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a767df400fd9ae2df289368233c7c29",
+    "content-hash": "0ff33acbb9867e253e5ad770266c9814",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -708,6 +708,61 @@
                 }
             ],
             "time": "2021-04-23T00:05:14+00:00"
+        },
+        {
+            "name": "genealabs/laravel-pivot-events",
+            "version": "8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/GeneaLabs/laravel-pivot-events.git",
+                "reference": "aafc9d7f6a0b31e0d58bd2b31e38253fbd27c2a9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/GeneaLabs/laravel-pivot-events/zipball/aafc9d7f6a0b31e0d58bd2b31e38253fbd27c2a9",
+                "reference": "aafc9d7f6a0b31e0d58bd2b31e38253fbd27c2a9",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^8.0",
+                "illuminate/support": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^6.0",
+                "symfony/thanks": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GeneaLabs\\LaravelPivotEvents\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike Bronner",
+                    "email": "hello@genealabs.com",
+                    "homepage": "https://genealabs.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This package introduces new eloquent events for sync(), attach(), detach() or updateExistingPivot() methods on BelongsToMany relation.",
+            "homepage": "https://github.com/fico7489/laravel-pivot",
+            "keywords": [
+                "eloquent events",
+                "eloquent extra events",
+                "laravel BelongsToMany events",
+                "laravel pivot events",
+                "laravel sync events"
+            ],
+            "support": {
+                "issues": "https://github.com/fico7489/laravel-pivot/issues",
+                "source": "https://github.com/fico7489/laravel-pivot"
+            },
+            "time": "2020-09-08T14:39:12+00:00"
         },
         {
             "name": "graham-campbell/result-type",

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SuspectResource;
 use App\Models\Suspect;
 use Illuminate\Http\Request;
+use App\Models\TattooFeature;
+use App\Events\FeaturesOfTattooUpdated;
+use Illuminate\Support\Str;
 
 class SuspectTattooController extends Controller
 {
@@ -70,13 +73,20 @@ class SuspectTattooController extends Controller
         $features = [];
 
         foreach($request->tattoo_features as $feature){
-            $feature = $tattoo->features()->firstOrCreate([
-                'name' => $feature
+            $feature = TattooFeature::firstOrCreate([
+                'name_slug' => Str::slug($feature)
+            ],[
+                'name' => $feature,
             ]);
 
             $features[] = $feature->id;
         }
+
         $tattoo->features()->sync($features);
+
+        dispatch(function() use ($tattoo) {
+            $tattoo->checkSearchesAndSendAlerts();
+        });
 
         return SuspectResource::make($tattoo->fresh());
     }

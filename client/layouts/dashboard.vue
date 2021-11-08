@@ -16,6 +16,8 @@
 
                 <NuxtLink to="/suspeitos" v-if="$bouncer.can('viewAll', 'App\\Models\\Suspect')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Suspeitos</NuxtLink>
               
+                <NuxtLink to="/pesquisas-salvas" v-if="$bouncer.can('viewAll', 'App\\Models\\SavedSuspectSearch')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('pesquisas')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Pesquisas Salvas</NuxtLink>
+
                 <NuxtLink to="/alertas" v-if="$bouncer.can('viewAll', 'App\\Models\\Alert')" class="px-3 py-2 rounded-md text-sm font-medium" :class="(checkMenuOptionActive('alertas')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')">Alertas</NuxtLink>
 
               </div>
@@ -46,6 +48,7 @@
                   <!-- Active: "bg-gray-100", Not Active: "" -->
                   <NuxtLink :to="`/usuarios/${this.$auth.user.id}`"><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Seu Perfil</a></NuxtLink>
                     <NuxtLink :to="`/usuarios/${this.$auth.user.id}/alertas`"><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Alertas</a></NuxtLink>
+                    <NuxtLink :to="`/usuarios/${this.$auth.user.id}/pesquisas-salvas`"><a class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Pesquisas Salvas</a></NuxtLink>
 
                   <button @click="logout" class="block px-4 py-2 text-sm text-gray-700 focus:outline-none" role="menuitem" tabindex="-1" id="user-menu-item-2">Logout</button>
                 </div>
@@ -87,6 +90,8 @@
 
           <NuxtLink to="/suspeitos" v-if="$bouncer.can('viewAll', 'App\\Models\\Suspect')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('suspeitos')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Suspeitos </NuxtLink>
 
+          <NuxtLink to="/pesquisas-salvas" v-if="$bouncer.can('viewAll', 'App\\Models\\SavedSuspectSearch')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('pesquisas')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Pesquisas Salvas </NuxtLink>
+
           <NuxtLink to="/alertas" v-if="$bouncer.can('viewAll', 'App\\Models\\Alert')" class="block px-3 py-2 rounded-md text-base font-medium" :class="(checkMenuOptionActive('alertas')? 'bg-gray-900 text-white': 'text-gray-300 hover:bg-gray-700 hover:text-white')"> Alertas </NuxtLink>
 
         </div>
@@ -97,6 +102,9 @@
               <div class="text-sm font-medium leading-none text-gray-400">{{$auth.user.email}}</div>
             </div>
             <NuxtLink :to="`/usuarios/${this.$auth.user.id}`"><a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Seu Perfil</a></NuxtLink>
+            <NuxtLink :to="`/usuarios/${this.$auth.user.id}/alertas`"><a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Alertas</a></NuxtLink>
+            <NuxtLink :to="`/usuarios/${this.$auth.user.id}/pesquisas-salvas`"><a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700">Pesquisas Salvas</a></NuxtLink>
+
 
             <button @click="logout" href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">Logout</button>
           </div>
@@ -121,7 +129,6 @@ export default{
   }),
   computed: {
       newAlert(){
-          console.log(this.newAlertId);
           return {
               id: this.newAlertId
           };

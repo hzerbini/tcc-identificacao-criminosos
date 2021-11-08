@@ -1,14 +1,6 @@
 <template>
     <PageWithHeader>
-        <template v-slot:header>Alertas</template>
-        <template v-slot:header-right>
-            <button @click="() => $modal.show('createAlert')" class="block bg-gray-900 p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring">
-                <UserAddIcon class="h-8 w-8 text-gray-100"/>
-            </button>
-            <portal to="modals">
-                <CreateAlertModal name="createAlert"  @alert-created="$fetch"/>
-            </portal>
-        </template>
+        <template v-slot:header>Pesquisas Salvas</template>
         <div>
             <div class="grid place-items-center h-80" v-if="$fetchState.pending">
                 <svg class="animate-spin -ml-1 mr-3 h-1/2 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -28,47 +20,49 @@
                                     Titulo
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Mensagem
+                                    Descrição
                                     </th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Data
+                                    Parâmetros
                                     </th>
-                                    <td scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Lido em
-                                    </td>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Criado em
+                                    </th>
                                     <th scope="col" class="relative px-6 py-3">
                                         <span class="sr-only">Actions</span>
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="alert in data.data" :key="alert.id">
+                                <tr v-for="search in data.data" :key="search.id">
                                     <th class="py-4 px-6 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
-                                            {{ alert.title }}
+                                            {{ search.name }}
                                         </div>
                                     </th>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4">
                                         <div class="text-sm font-medium text-gray-900 w-32 truncate">
-                                            {{alert.message}}
+                                            {{search.description}}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
-                                            {{(new Date(alert.created_at)).toLocaleString("pt-br")}}
+                                            <ul class="list-disc" v-for="feature in search.tattoo_features">
+                                                <li class="w-32 truncate">{{ feature.name }}</li>
+                                            </ul>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
-                                           {{ (alert.read_at != null)? (new Date(alert.created_at)).toLocaleString("pt-br") : 'Não lido.' }}
+                                            {{(new Date(search.created_at)).toLocaleString("pt-br")}}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button v-if="$bouncer.can('view', alert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => $modal.show(`view.${alert.id}`)">Visualizar</button>
-                                        <button v-if="$bouncer.can('delete', alert)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteAlert(alert)">Deletar</button>
+                                            <button v-if="$bouncer.can('view', search)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => $modal.show(`view.${search.id}`)">Visualizar</button>
+                                            <button v-if="$bouncer.can('delete', search)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteSearch(search)">Deletar</button>
                                     </td>
                                     <portal to="modals">
-                                        <AlertModal :name="`view.${alert.id}`" :alert='alert' @update-alert="$fetch"/>
+                                        <SavedSearchModal :name="`view.${search.id}`" :search='search'/>
                                     </portal>
                                 </tr>
                                 </tbody>
@@ -92,17 +86,8 @@ export default {
     watch: {
         '$route.query': '$fetch'
     },
-    mounted (){
-      this.$echo.private(`alerts.${this.$auth.user.id}`)
-        .listen('NewAlertSent', (e) => {
-            this.$fetch();
-        });
-    },
-    beforeDestroy(){
-        this.$echo.leave(`alerts.${this.$auth.user.id}`);
-    },
     methods: {
-        deleteAlert(alert){
+        deleteSearch(search){
             this.$swal({
                 title: 'Tem certeza que deseja remover o alerta?',
                 icon: 'warning',
@@ -113,7 +98,7 @@ export default {
                 cancelButtonText:'Não',
             }).then(result => {
                 if(result.isConfirmed){
-                    this.$axios.delete(`/api/alerts/${alert.id}`).then(()=>{
+                    this.$axios.delete(`/api/saved-suspect-searches/${search.id}`).then(()=>{
                         this.$swal({
                             toast: true,
                             position: 'top-end',
@@ -121,7 +106,7 @@ export default {
                             timer: 3000,
                             timerProgressBar: true,
                             icon: 'success',
-                            title: 'Usuário deletado com sucesso!',
+                            title: 'Pesquisa deletada com sucesso!',
                         });
                     }).catch(() => {
                         this.$swal({
@@ -131,7 +116,7 @@ export default {
                             timer: 3000,
                             timerProgressBar: true,
                             icon: 'error',
-                            title: 'Falha ao deletar usuário!',
+                            title: 'Falha ao deletar pesquisa!',
                         });
                     }).finally(() => this.$fetch());
                 }
@@ -139,8 +124,7 @@ export default {
         }
     },
     async fetch() {
-        console.log(this.$route.params)
-        this.data = await this.$axios.get(`/api/users/${this.$route.params.userId}/alerts`, {
+        this.data = await this.$axios.get(`/api/users/${this.$route.params.userId}/saved-suspect-searches`, {
             params: this.$route.query
         }).then(res => res.data).catch(err => {
             this.$swal({
@@ -150,13 +134,11 @@ export default {
                 timer: 3000,
                 timerProgressBar: true,
                 icon: 'error',
-                title: 'Falha ao buscar alertas!',
+                title: 'Falha ao buscar pesquisas salvas!',
             });
 
             this.$router.push('/');
         });
-
-        console.log(this.data);
     }
 }
 </script>

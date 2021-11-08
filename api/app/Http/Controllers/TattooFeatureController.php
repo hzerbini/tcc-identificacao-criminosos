@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TattooFeature;
 use App\Http\Resources\TattooFeatureResource;
-
+use Illuminate\Support\Str;
 
 class TattooFeatureController extends Controller
 {
@@ -19,55 +19,11 @@ class TattooFeatureController extends Controller
         $request->validate([
             'search' => 'nullable|string'
         ]);
-        $search = $request->search;
+        $search = Str::slug($request->search);
 
-        $tattoos = TattooFeature::where('name', 'ILIKE', "%$search%")->paginate(10);
+        $tattoos = TattooFeature::where('name_slug', 'ILIKE', "%$search%")->paginate(10);
 
         return TattooFeatureResource::collection($tattoos);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+    
 }

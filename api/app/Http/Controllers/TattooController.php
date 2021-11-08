@@ -27,7 +27,7 @@ class TattooController extends Controller
         if($features){
             $featureIds = TattooFeature::whereIn('name', $features)->pluck('id');
         
-            $tattooIds = $tattooIds = Db::table('tattoo_tattoo_feature')
+            $tattooIds = Db::table('tattoo_tattoo_feature')
                 ->whereIn('tattoo_feature_id', $featureIds)
                 ->groupBy('tattoo_id')
                 ->havingRaw('COUNT(*) >= ' . count($features))

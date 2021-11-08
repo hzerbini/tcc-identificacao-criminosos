@@ -7,6 +7,7 @@ use App\Models\Tattoo;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TattooFeature;
+use Illuminate\Support\Str;
 
 class RecognizeTattoElements extends Command
 {
@@ -39,6 +40,7 @@ class RecognizeTattoElements extends Command
      *
      * @return int
      */
+
     public function handle()
     {
         $featureIds = [];
@@ -77,6 +79,8 @@ class RecognizeTattoElements extends Command
         
         foreach($tattooElements as $tattooElement){
                 $feature = TattooFeature::firstOrCreate([
+                    'name_slug' => Str::slug($tattooElement)
+                ],[
                     'name' => $tattooElement
                 ]);
     

@@ -27,7 +27,7 @@ services:
       context: docker/dev/php
       dockerfile: Dockerfile
     volumes:
-      - ./api:/var/www/api
+      - ./api:/var/www/api:z
     environment:
       # If you down want to use xDebug, set remote_enable=0
       XDEBUG_CONFIG: "remote_enable=1"
@@ -54,18 +54,18 @@ services:
       - ./python:/var/www/python
 
   # Supervisor container (schedule and queue runner)
-  # supervisor:
-  #   build:
-  #     context: docker/dev/supervisor
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./:/var/www/
-  #     - ./docker/dev/supervisor/conf.d:/etc/supervisor/conf.d
-  #     - ./docker/dev/supervisor/logs:/var/log
-  #   depends_on:
-  #     - postgres
-  #     - redis
-  #     - mailhog
+  supervisor:
+    build:
+      context: docker/dev/supervisor
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/
+      - ./docker/dev/supervisor/conf.d:/etc/supervisor/conf.d
+      - ./docker/dev/supervisor/logs:/var/log
+    depends_on:
+      - postgres
+      - redis
+      - mailhog
 
   # PostgreSQL database container
   postgres:
@@ -120,7 +120,7 @@ services:
       context: docker/dev/client
       dockerfile: Dockerfile
     volumes:
-      - ./client:/var/www/client
+      - ./client:/var/www/client:z
   #S3 Object Storage
   minio:
     build:

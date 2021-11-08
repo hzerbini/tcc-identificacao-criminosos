@@ -23,7 +23,7 @@ RUN apt-get install -y supervisor
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 # Crontab
-RUN apt-get install -y cron
+RUN apt-get update && apt-get install -y cron
 COPY cron.d/schedule /etc/cron.d
 RUN chmod -R 644 /etc/cron.d
 RUN crontab /etc/cron.d/schedule

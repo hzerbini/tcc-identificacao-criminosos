@@ -14,6 +14,8 @@ use App\Http\Resources\UserResource;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserPhotoController;
 use App\Http\Controllers\UserAlertController;
+use App\Http\Controllers\UserSavedSuspectSearchController;
+use App\Http\Controllers\SavedSuspectSearchController;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Broadcast;
 /*
@@ -65,9 +67,14 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
             Route::get('/', [UserAlertController::class, 'index'])->middleware('ifNotUserAuthorize:user,viewAll,App\\Models\\Alert');
             Route::post('/', [UserAlertController::class, 'store'])->middleware('can:create,App\\Models\\Alert');
         });
+
+        Route::group(['prefix' => '{user}/saved-suspect-searches'], function(){
+            Route::get('/', [UserSavedSuspectSearchController::class, 'index'])->middleware('ifNotUserAuthorize:user,viewAll,App\\Models\\SavedSuspectSearch');
+            Route::post('/', [UserSavedSuspectSearchController::class, 'store'])->middleware('ifNotUserAuthorize:user,create,App\\Models\\SavedSuspectSearch');
+        });
     });
 
-    Route::group(['prefix' => '/suspects'], function(){
+    Route::group(['prefix' => '/suspects', 'as' => 'suspect.'], function(){
         Route::get('/', [SuspectController::class, 'index'])->middleware('can:viewAll,App\\Models\\Suspect');
         Route::get('/{suspect}', [SuspectController::class, 'show'])->middleware('can:view,suspect');
         Route::post('/', [SuspectController::class, 'store'])->middleware('can:create,App\\Models\\Suspect');
@@ -91,6 +98,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
         Route::get('/{alert}', [AlertController::class, 'show'])->middleware('can:view,alert');
         Route::patch('/{alert}', [AlertController::class, 'update'])->middleware('can:view,alert');
         Route::delete('/{alert}', [AlertController::class, 'destroy'])->middleware('can:delete,alert');
+    });
+
+    Route::group(['prefix' => 'saved-suspect-searches'], function(){
+        Route::get('/', [SavedSuspectSearchController::class, 'index'])->middleware('can:viewAll,App\\Models\\SavedSuspectSearch');
+        Route::delete('/{savedSuspectSearch}', [SavedSuspectSearchController::class, 'destroy'])->middleware('can:delete,savedSuspectSearch');
     });
 
 

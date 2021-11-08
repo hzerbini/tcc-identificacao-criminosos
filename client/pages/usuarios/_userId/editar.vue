@@ -138,6 +138,10 @@
                                                 <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Alertas:</label>
                                                 <input type="checkbox" v-model="manageAlerts"  @change="() => changePermission(manageAlerts, 'manageAlerts')">
                                             </div>
+                                            <div class="col-span-12 sm:col-span-6 flex">
+                                                <label class="block text-sm font-medium text-gray-700 mr-4">Gerenciar Pesquisas de Suspeitos:</label>
+                                                <input type="checkbox" v-model="manageSavedSuspectSearches"  @change="() => changePermission(manageSavedSuspectSearches, 'manageSavedSuspectSearches')">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -182,6 +186,7 @@ export default {
         managePermissions: false,
         manageSuspects: false,
         manageAlerts: false,
+        manageSavedSuspectSearches: false
     }),
     watch: {
         '$route.query': '$fetch'
@@ -208,10 +213,12 @@ export default {
     },
     methods: {
         updatePermissions: function (user){
-            this.manageUsers = this.$bouncer.can('*', 'App\\Models\\User');
-            this.managePermissions = this.$bouncer.can('managePermissions');
-            this.manageSuspects = this.$bouncer.can('*', 'App\\Models\\Suspect');
-            this.manageAlerts = this.$bouncer.can('*', 'App\\Models\\Alert');
+            const bouncer = new Bouncer(user);
+            this.manageUsers = bouncer.can('*', 'App\\Models\\User');
+            this.managePermissions = bouncer.can('managePermissions');
+            this.manageSuspects = bouncer.can('*', 'App\\Models\\Suspect');
+            this.manageAlerts = bouncer.can('*', 'App\\Models\\Alert');
+            this.manageSavedSuspectSearches = bouncer.can('*', 'App\\Models\\SavedSuspectSearch');
         },
         changePermission: async function(operation, permission){
             try{

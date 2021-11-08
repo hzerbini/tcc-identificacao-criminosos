@@ -75,6 +75,11 @@ class User extends Authenticatable
         return $this->hasMany(Alert::class);
     }
 
+    public function savedSuspectSearches()
+    {
+        return $this->hasMany(SavedSuspectSearch::class);
+    }
+
     public function photos()
     {
         return $this->morphMany(Photo::class, 'photable');

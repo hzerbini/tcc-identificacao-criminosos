@@ -8,6 +8,7 @@ use App\Models\Suspect;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Silber\Bouncer\BouncerFacade as Bouncer;
+use App\Models\SavedSuspectSearch;
 
 class BouncerController extends Controller
 {
@@ -25,6 +26,9 @@ class BouncerController extends Controller
             },
             'manageAlerts' => function($bouncerInstance){
                 $bouncerInstance->toManage(Alert::class);
+            },
+            'manageSavedSuspectSearches' => function($bouncerInstance){
+                $bouncerInstance->toManage(SavedSuspectSearch::class);
             }
         ]);
     }
