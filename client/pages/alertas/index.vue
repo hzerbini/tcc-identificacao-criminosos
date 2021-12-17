@@ -39,20 +39,18 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 <tr v-for="alert in data.data" :key="alert.id">
                                     <th class="py-4 whitespace-nowrap">
-                                        <div v-if="$bouncer.can('view', alert.user)" class="text-sm font-medium text-blue-700 hover:text-blue-900">
+                                        <div v-if="$bouncer.can('view','App\\Models\\User', alert.user)" class="text-sm font-medium text-blue-700 hover:text-blue-900">
                                             <NuxtLink  :to="`/usuarios/${alert.user_id}`">{{ alert.user.name }}</NuxtLink>
                                         </div>
                                         <span v-else>{{ alert.user.name }}</span>
                                     </th>
                                     <td class="py-4 px-6 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">
+                                        <div class="text-sm font-medium text-gray-900" >
                                             {{ alert.title }}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 w-32 truncate">
-                                            {{alert.message}}
-                                        </div>
+                                        <div class="text-sm font-medium text-gray-900 w-32 truncate" v-html="alert.message"></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
@@ -61,12 +59,12 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
-                                           {{ (alert.read_at != null)? (new Date(alert.created_at)).toLocaleString("pt-br") : 'Não lido.' }}
+                                           {{ (alert.read_at != null)? (new Date(alert.read_at)).toLocaleString("pt-br") : 'Não lido.' }}
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button v-if="$bouncer.can('view', alert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold"" @click="() => $modal.show(`view.${alert.id}`)">Visualizar</button>
-                                        <button v-if="$bouncer.can('delete', alert)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteAlert(alert)">Deletar</button>
+                                        <button v-if="$bouncer.can('view', 'App\\Models\\Alert', alert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold"" @click="() => $modal.show(`view.${alert.id}`)">Visualizar</button>
+                                        <button v-if="$bouncer.can('delete','App\\Models\\Alert', alert)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteAlert(alert)">Deletar</button>
                                     </td>
                                     <portal to="modals">
                                         <AlertModal :name="`view.${alert.id}`" :alert='alert' @update-alert="$fetch"/>
@@ -89,6 +87,7 @@ export default {
     layout: 'dashboard',
     data:() => ({
         data: null,
+        teste: '<span class="bg-red-500"> TESTE LOUCO</span>'
     }),
     watch: {
         '$route.query': '$fetch'

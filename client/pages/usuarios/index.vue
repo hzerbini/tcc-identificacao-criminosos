@@ -2,9 +2,16 @@
     <PageWithHeader>
         <template v-slot:header>Usuários</template>
         <template v-slot:header-right>
-            <NuxtLink to="/usuarios/criar" class="block bg-gray-900 p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring">
-                <UserAddIcon class="h-8 w-8 text-gray-100"/>
-            </NuxtLink>
+            <div class="flex gap-3">
+                <input v-model="search" type="text" 
+                    class="px-2 py-1 bg-gray-900 text-white focus:outline-none focus:ring-blue-500
+                        focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Procurar..."
+                    />
+                <NuxtLink to="/usuarios/criar" class="block bg-gray-900 p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring">
+                    <UserAddIcon class="h-8 w-8 text-gray-100"/>
+                </NuxtLink>
+            </div>
         </template>
         <div>
             <div class="grid place-items-center h-80" v-if="$fetchState.pending">
@@ -13,7 +20,7 @@
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
             </div>
-            <p v-else-if="$fetchState.error">Acontenceu algum erro :C</p>
+            <p v-else-if="$fetchState.error">Acontenceu algum erro</p>
             <div v-else class="flex flex-col">
                 <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -78,9 +85,20 @@ export default {
     layout: 'dashboard',
     data:() => ({
         data: null,
+        search: '',
+        timerId: null,
     }),
     watch: {
-        '$route.query': '$fetch'
+        '$route.query': '$fetch',
+        search: function(val) {
+            if (this.timerId) {
+                clearTimeout(this.timerId);
+            }
+
+            this.timerId = setTimeout(() => {
+                this.$fetch();
+            }, 500)
+        }
     },
     methods: {
         deleteUser(user){
@@ -121,7 +139,7 @@ export default {
     },
     async fetch() {
         this.data = await this.$axios.get('/api/users', {
-            params: this.$route.query
+            params: {...this.$route.query, ...{search: this.search} }
         }).then(res => res.data).catch(err => {
             this.$swal({
                 toast: true,

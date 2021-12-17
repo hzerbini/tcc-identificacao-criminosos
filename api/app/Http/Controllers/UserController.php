@@ -15,9 +15,17 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return UserResource::collection(User::paginate(10));
+        $request->validate([
+            'search' => 'nullable|string'
+        ]);
+        $search = "%{$request->get('search', '')}%";
+
+        return UserResource::collection(User::where(function($query) use ($search){
+            return $query->where('name', 'ILIKE', $search)
+                ->orWhere('email', 'ILIKE', $search);
+        })->paginate(10));
     }
 
     /**

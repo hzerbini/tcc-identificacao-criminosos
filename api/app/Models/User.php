@@ -62,11 +62,15 @@ class User extends Authenticatable
             Bouncer::allow($user)->toOwn(Alert::class)->to([
                 'view', 'delete'
             ]);
+            Bouncer::allow($user)->toOwn(SavedSuspectSearch::class)->to([
+                'view', 'delete'
+            ]);
         });
 
         static::deleting(function ($user){
             $user->photos->each->delete();
             $user->alerts->each->delete();
+            $user->savedSuspectSearches->each->delete();
         });
     }
 

@@ -7,7 +7,14 @@
                 <div v-show="isOpen">
                     <ul v-if="tattoo_features.length == 0 && search.length > 3" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
                         <li class="text-gray-900 cursor-default select-none relative" role="option">
-                            {{ (loadingFeatures)?"carregando...":"Nenhum filtro corresponde a sua pesquisa." }}
+                            <span class="w-full h-full py-2 pl-3 pr-9">
+                                {{ (loadingFeatures)?"carregando...":"Nenhum filtro corresponde a sua pesquisa." }}
+                            </span>
+                        </li>
+                        <li class="text-gray-900 cursor-default select-none relative" v-if="!loadingFeatures">
+                            <button class="w-full h-full py-2 pl-3 pr-9 hover:bg-gray-200 focus:outline-none" @click="addFeature(search)">
+                                +
+                            </button>
                         </li>
                     </ul>
                     <ul v-else-if="tattoo_features. length > 0" class="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
@@ -31,7 +38,11 @@
                     </ul>
                 </div>
             </div>
-            <button class="bg-indigo-800 p-2 px-4 font-semibold text-lg text-white ml-4 rounded-md" @click="saveSearch">+</button>
+            <button class="bg-indigo-800 p-2 px-4 font-semibold text-lg text-white ml-4 rounded-md" @click="saveSearch">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 4v12l-4-2-4 2V4M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </button>
       </div>
       <div class="flex flex-wrap gap-4 px-2 py-1 text-white">
           <button v-for="feature in features" class="focus:outline-none"  @click="() => {features = features.filter(f => f !== feature)}"> {{ feature }} x</button>
@@ -46,7 +57,7 @@
       </div>
       <div v-else>
         <div class="grid place-items-center my-12">
-        
+
           <carousel  :nav="false" :items="1" class="w-64 h-64 md:w-96 md:h-96">
             <div v-for="tattoo in tattoos" class="relative">
               <NuxtLink class="absolute top-0 right-0 bg-red-500 rounded-md" :to="`/suspeitos/${tattoo.suspect_id}`">Suspeito</NuxtLink>

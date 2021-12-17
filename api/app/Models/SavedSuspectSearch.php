@@ -34,15 +34,17 @@ class SavedSuspectSearch extends Model
 
     public function scopeWithTattooFeatures($query, $features)
     {
-        $query = $query->with('tattooFeatures');
+        $query = $query->with('tattooFeatures')->where(function($query) use ($features){
+            foreach($features as $feature)
+            {
+                $query = $query->whereHas('tattooFeatures', function($query) use ($feature){
+                    return $query->where('name', $feature->name);
+                });
+            }
 
-        foreach($features as $feature)
-        {
-            $query = $query->whereHas('tattooFeatures', function($query) use ($feature){
-                return $query->where('name', $feature->name);
-            });
-        }
-
+            return $query;
+        });
+        
         return $query;
     }
 }

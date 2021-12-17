@@ -58,8 +58,8 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button v-if="$bouncer.can('view', search)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => $modal.show(`view.${search.id}`)">Visualizar</button>
-                                            <button v-if="$bouncer.can('delete', search)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteSearch(search)">Deletar</button>
+                                            <button v-if="$bouncer.can('view', 'App\\Models\\SavedSuspectSearch', search)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => $modal.show(`view.${search.id}`)">Visualizar</button>
+                                            <button v-if="$bouncer.can('delete', 'App\\Models\\SavedSuspectSearch', search)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteSearch(search)">Deletar</button>
                                     </td>
                                     <portal to="modals">
                                         <SavedSearchModal :name="`view.${search.id}`" :search='search'/>

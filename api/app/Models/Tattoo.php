@@ -35,10 +35,7 @@ class Tattoo extends Model
 
                 $user->alerts()->create([
                     'title' => 'Tatuagem (' . $tattoo->id . ') foi avaliada com sucesso',
-                    'message' => 'A tatuagem com id ' . $tattoo->id . 
-                    ' foi avaliada com sucesso pelo nosso sistema, você já pode ver os resultados na página do suspeito com nome' .
-                    $tattoo->suspect->name . ' (' .
-                    $tattoo->suspect->id . ')'
+                    'message' => "A tatuagem com id {$tattoo->id} foi avaliada com sucesso pelo nosso sistema, você já pode ver os resultados na página do suspeito <a class=\"text-blue-500\" target=\"_blank\" href=\"/suspeitos/{$tattoo->suspect->id}\">{$tattoo->suspect->name} ( {$tattoo->suspect->id} )</a>."
                 ]);
     
                 $tattoo->checkSearchesAndSendAlerts();
@@ -87,8 +84,8 @@ class Tattoo extends Model
                     ->alerts()
                     ->create([
                         'title' => 
-                            'Pesquisa Encontrada: "' . $savedSuspectSearch->name . '"',
-                        'message' => 'Link para suspeito é: ' . config('app.url') . '/suspeitos/' . ((string) $tattoo->suspect_id )
+                            "Pesquisa Encontrada: {$savedSuspectSearch->name}",
+                        'message' => "Clique <a class=\"text-blue-500\" target=\"_blank\" href=\"/suspeitos/{$tattoo->suspect_id}\">aqui</a> para ver o suspeito."
                     ]);
             }
 

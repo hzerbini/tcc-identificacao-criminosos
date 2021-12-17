@@ -76,7 +76,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
     Route::group(['prefix' => '/suspects', 'as' => 'suspect.'], function(){
         Route::get('/', [SuspectController::class, 'index'])->middleware('can:viewAll,App\\Models\\Suspect');
-        Route::get('/{suspect}', [SuspectController::class, 'show'])->middleware('can:view,suspect');
+        Route::get('/{suspect}', [SuspectController::class, 'show']);// ->middleware('can:view,suspect');
         Route::post('/', [SuspectController::class, 'store'])->middleware('can:create,App\\Models\\Suspect');
         Route::patch('/{suspect}', [SuspectController::class, 'update'])->middleware('can:update,suspect');
         Route::delete('/{suspect}', [SuspectController::class, 'destroy'])->middleware('can:delete,suspect');

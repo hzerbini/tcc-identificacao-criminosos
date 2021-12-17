@@ -27,12 +27,12 @@
             </template>
             <template v-if="!editing">
                 <div class="text-right mb-8">
-                    <button v-if="$bouncer.can('update', fetchedAlert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => editing = true">Editar</button>
+                    <button v-if="$bouncer.can('update', 'App\\Models\\Alert', fetchedAlert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => editing = true">Editar</button>
                     <button v-if="fetchedAlert.read_at != null" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="markAsNotRead">Marcar como não lido</button>
                 </div>
                 <h3 class="mb-2 text-2xl text-center text-gray-900">{{fetchedAlert.title}}</h3>
                 <hr/>
-                <p class="mx-8 text-center text-gray-600 text-lg mt-8">{{fetchedAlert.message}}</p>
+                <p class="mx-8 text-center text-gray-600 text-lg mt-8" v-html="fetchedAlert.message"></p>
             </template>
 
         </div>

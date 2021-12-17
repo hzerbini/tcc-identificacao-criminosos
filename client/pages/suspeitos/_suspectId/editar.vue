@@ -3,7 +3,7 @@
         <template v-slot:header>Edição de Suspeito</template>
         <template v-slot:header-right>
             <NuxtLink :to="`/suspeitos/${suspect.id}`" class="text-indigo-600 hover:text-indigo-900 mx-2">Visualizar</NuxtLink>
-            <button href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteSuspect(suspect)">Deletar</button>
+            <button v-if="$bouncer.can('delete', 'App\\Models\\Suspect', search)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2" @click="deleteSuspect(suspect)">Deletar</button>
         </template>
         <div class="grid place-items-center h-80" v-if="$fetchState.pending">
             <svg class="animate-spin -ml-1 mr-3 h-1/2 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

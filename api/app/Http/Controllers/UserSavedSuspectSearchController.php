@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\TattooFeature;
 use App\Http\Resources\SavedSuspectSearchResource;
+use Illuminate\Support\Str;
 
 class UserSavedSuspectSearchController extends Controller
 {
@@ -42,6 +43,8 @@ class UserSavedSuspectSearchController extends Controller
 
         foreach($request->tattooFeatures as $featureName){
             $tattooFeature = TattooFeature::firstOrCreate([
+                'name_slug' => Str::slug($featureName)
+            ],[
                 'name' => $featureName
             ]);
 

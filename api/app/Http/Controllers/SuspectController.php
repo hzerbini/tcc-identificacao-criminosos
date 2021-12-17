@@ -13,9 +13,17 @@ class SuspectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return SuspectResource::collection(Suspect::paginate(10));
+        $request->validate([
+            'search' => 'nullable|string'
+        ]);
+        $search = "%{$request->get('search', '')}%";
+
+        return SuspectResource::collection(Suspect::where(function($query) use ($search){
+            return $query->where('name', 'ILIKE', $search)
+                ->orWhere('cpf', 'ILIKE', $search);
+        })->paginate(10));
     }
 
     /**

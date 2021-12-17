@@ -208,7 +208,6 @@ export default {
         this.user = data;
         this.name = data.name;
 
-        //permissions
         this.updatePermissions(data);
     },
     methods: {

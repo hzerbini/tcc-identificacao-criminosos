@@ -2,9 +2,16 @@
     <PageWithHeader>
         <template v-slot:header>Suspeitos</template>
         <template v-slot:header-right>
-            <NuxtLink to="/suspeitos/criar" class="block bg-gray-900 p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring">
-                <UserAddIcon class="h-8 w-8 text-gray-100"/>
-            </NuxtLink>
+            <div class="flex gap-3">
+                <input v-model="search" type="text" 
+                    class="px-2 py-1 bg-gray-900 text-white focus:outline-none focus:ring-blue-500
+                        focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Procurar..."
+                    />
+                <NuxtLink to="/suspeitos/criar" class="block bg-gray-900 p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring">
+                    <UserAddIcon class="h-8 w-8 text-gray-100"/>
+                </NuxtLink>
+            </div>
         </template>
         <div>
             <div class="grid place-items-center h-80" v-if="$fetchState.pending">
@@ -85,9 +92,20 @@ export default {
     layout: 'dashboard',
     data:() => ({
         data: null,
+        search: '',
+        timerId: null,
     }),
     watch: {
-        '$route.query': '$fetch'
+        '$route.query': '$fetch',
+        search: function(val) {
+            if (this.timerId) {
+                clearTimeout(this.timerId);
+            }
+
+            this.timerId = setTimeout(() => {
+                this.$fetch();
+            }, 500)
+        }
     },
     methods: {
         getSuspectDate(suspect){
@@ -132,7 +150,7 @@ export default {
     },
     async fetch() {
         this.data = await this.$axios.get('/api/suspects', {
-            params: this.$route.query
+            params: {...this.$route.query, ...{search: this.search} }
         }).then(res => res.data).catch(err => {
             this.$swal({
                 toast: true,

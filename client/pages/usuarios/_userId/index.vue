@@ -30,12 +30,15 @@
                             Permissões:
                         </dt>
                         <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                            <span v-if="$bouncer.can('*')">
+                            <span v-if="userBouncer.can('*')">
                                 Esse usuário tem permissão para executar tudo no sistema.
                             </span>
                             <ul v-else>
-                                <li v-if="$bouncer.can('*', 'App\\Models\\User')">Gerenciar Usuários</li>
-                                <li v-if="$bouncer.can('managePermissions')">Gerenciar Permissionamento de Usuários</li>
+                                <li v-if="userBouncer.can('*', 'App\\Models\\User')">Gerenciar Usuários</li>
+                                <li v-if="userBouncer.can('managePermissions')">Gerenciar Permissionamento de Usuários</li>
+                                <li v-if="userBouncer.can('*', 'App\\Models\\Suspect')">Gerenciar Suspeitos</li>
+                                <li v-if="userBouncer.can('*', 'App\\Models\\Alert')">Gerenciar Alertas</li>
+                                <li v-if="userBouncer.can('*', 'App\\Models\\SavedSuspectSearch')">Gerenciar Pesquisas de Suspeitos</li>
                             </ul>
                         </dd>
                     </div>
@@ -63,10 +66,19 @@ import carousel from 'vue-owl-carousel'
 export default {
     layout: 'dashboard',
     data: () => ({
-        user: {},
+        user: {}
     }),
     watch: {
         '$route.query': '$fetch'
+    },
+    computed: {
+        userBouncer: function(){
+            console.log(this.user);
+            const bouncer = new Bouncer(this.user);
+            console.log(Bouncer);
+
+            return bouncer;
+        }
     },
     methods: {
         deleteUser(){

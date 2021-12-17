@@ -3,7 +3,7 @@
         <template v-slot:header>Alertas</template>
         <template v-slot:header-right>
             <button @click="() => $modal.show('createAlert')" class="block bg-gray-900 p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring">
-                <UserAddIcon class="h-8 w-8 text-gray-100"/>
+                <AlertIcon class="h-8 w-8 text-gray-100"/>
             </button>
             <portal to="modals">
                 <CreateAlertModal name="createAlert"  @alert-created="$fetch"/>
@@ -49,9 +49,7 @@
                                         </div>
                                     </th>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 w-32 truncate">
-                                            {{alert.message}}
-                                        </div>
+                                        <div class="text-sm font-medium text-gray-900 w-32 truncate" v-html="alert.message"></div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium text-gray-900">
@@ -64,8 +62,8 @@
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button v-if="$bouncer.can('view', alert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => $modal.show(`view.${alert.id}`)">Visualizar</button>
-                                        <button v-if="$bouncer.can('delete', alert)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteAlert(alert)">Deletar</button>
+                                        <button v-if="$bouncer.can('view', 'App\\Models\\Alert', alert)" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="() => $modal.show(`view.${alert.id}`)">Visualizar</button>
+                                        <button v-if="$bouncer.can('delete', 'App\\Models\\Alert', alert)" href="#" class="text-indigo-600 hover:text-indigo-900 mx-2 font-semibold" @click="deleteAlert(alert)">Deletar</button>
                                     </td>
                                     <portal to="modals">
                                         <AlertModal :name="`view.${alert.id}`" :alert='alert' @update-alert="$fetch"/>
